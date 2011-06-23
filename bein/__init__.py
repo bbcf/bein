@@ -1052,7 +1052,7 @@ class MiniLIMS(object):
                                                source[1], source[1]))
         return [x for (x,) in matching_files]
 
-    def search_executions(self, with_text=None, started_before=None,
+    def search_executions(self, with_text=None, with_description=None, started_before=None,
                           started_after=None, ended_before=None, ended_after=None):
         """Find executions matching the given criteria.
 
@@ -1085,7 +1085,8 @@ class MiniLIMS(object):
                  (started_at >= ? or ? is null) and
                  (finished_at <= ? or ? is null) and 
                  (finished_at >= ? or ? is null) and
-                 (description like ? or ? is null)
+                 (description like ? or ? is null) and
+                 ((working_directory like ? or ? is null) or (description like ? or ? is null))
               """
         matching_executions = [x for (x,) in 
                                self.db.execute(sql, 
@@ -1097,6 +1098,10 @@ class MiniLIMS(object):
                                                 ended_before,
                                                 ended_after, 
                                                 ended_after,
+                                                with_description,
+                                                with_description,
+                                                with_text,
+                                                with_text,
                                                 with_text,
                                                 with_text))]
         if with_text != None:

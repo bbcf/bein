@@ -156,6 +156,12 @@ class TestMiniLIMS(TestCase):
         M.delete_file(f_id)
         self.assertIn(f_id, f_found)
 
+    def test_search_executions_bydesc(self):
+        with execution(M, description="desc_test") as ex:
+            pass
+        ex_found = M.search_executions(with_description="desc_test")
+        self.assertIn(ex.id,ex_found)
+
 class TestExportFile(TestCase):
     def test_export_file(self):
         filea = M.import_file("../LICENSE")  #file ID
