@@ -171,7 +171,6 @@ class program(object):
             b.wait()
 
     By default, ``nonblocking`` runs local processes, but you can
-
     control how it runs its processes with the ``via`` keyword
     argument.  For example, on systems using the LSF batch submission
     system,s you can run commands via batch submission by passing the
@@ -508,8 +507,7 @@ class Execution(object):
         filename is the name of the file in the execution's working
         directory to import.  description is an optional argument to
         assign a string to describe that file in the MiniLIMS
-        repository.  The function returns an integer, the file id of
-        the file in the MiniLIMS repository.
+        repository.
 
         Note that the file is not actually added to the repository
         until the execution finishes.
@@ -584,7 +582,7 @@ def execution(lims = None, description="", remote_working_directory=None):
     run than on the nodes from which jobs are submitted.  For
     instance, if you are working in /scratch/abc on your local node,
     the worker nodes might mount the same directory as
-    /nfs/boris/scratch/abc.  In this case, running programs via LSF
+    /nfs/username/scratch/abc.  In this case, running programs via LSF
     would not work correctly.
 
     If this is the case, you can pass the equivalent directory on
