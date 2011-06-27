@@ -582,7 +582,7 @@ def execution(lims = None, description="", remote_working_directory=None):
     run than on the nodes from which jobs are submitted.  For
     instance, if you are working in /scratch/abc on your local node,
     the worker nodes might mount the same directory as
-    /nfs/username/scratch/abc.  In this case, running programs via LSF
+    /nfs/boris/scratch/abc.  In this case, running programs via LSF
     would not work correctly.
 
     If this is the case, you can pass the equivalent directory on
