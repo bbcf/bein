@@ -1018,6 +1018,9 @@ class MiniLIMS(object):
            * *with_text*: The file's external_name or description
              contains *with_text*
 
+           * *with_description*: The file's description contains 
+             *with_description*
+
            * *older_than*: The file's created time is earlier than
              *older_than*.  This should be of the form "YYYY-MM-DD
              HH:MM:SS".  Final fields can be omitted, so "YYYY" and
@@ -1062,10 +1065,13 @@ class MiniLIMS(object):
            * *with_text*: The execution's description or one of the
              program arguments in the execution contains *with_text*.
 
+           * *with_description*: The execution's description contains 
+             *with_description*
+
            * *started_before*: The execution started running before
-             *start_before*.  This should be of the form "YYYY:MM:DD
+             *start_before*.  This should be of the form "YYYY-MM-DD
              HH:MM:SS".  Final fields can be omitted, so "YYYY" and
-             "YYYY:MM:DD HH:MM" are also valid date formats.
+             "YYYY-MM-DD HH:MM" are also valid date formats.
 
            * *started_after*: The execution started running after
              *started_after*.  The format is identical to
