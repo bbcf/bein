@@ -53,6 +53,7 @@ program
     programs into bein for use in executions.
 """
 import subprocess
+import pickle
 import random
 import traceback
 import string
@@ -518,7 +519,7 @@ class Execution(object):
             if description == "":
                 raise(IOError("Tried to add None to repository."))
             else:
-                raise(IOError("Tried to add None with descrition '" + description +"' to repository."))
+                raise(IOError("Tried to add None to repository, with description '" + description +"' ."))
         elif not(os.path.exists(filename)):
             raise IOError("No such file or directory: '"+filename+"'")
         else:
@@ -895,6 +896,7 @@ class MiniLIMS(object):
         to the repository are copied to the repository and entered in
         the file table.
         """
+        if isinstance(description,dict): description = str(description)
         self.db.execute("""insert into execution
                            (started_at, finished_at, working_directory,
                             description, exception) 
@@ -1033,11 +1035,28 @@ class MiniLIMS(object):
              this file, and ``srcid`` is the file ID of the file which
              was copied to create this one.
         """
-        if not(isinstance(source, tuple)):  # If source is not a tuple,
-            source = (source,None)          # make it be a tuple.
+        desc_request = "(id is not null)";
+        if isinstance(with_description,dict):
+            sql = """select description,id from file where length(description)>1 """
+            descriptions = self.db.execute(sql).fetchall()
+            from_db=[]; descriptions_to_keep=[]; desc_request="("
+            for d in descriptions:
+                if d[0][0] == '{':
+                    try: from_db.append( (eval(d[0]),d[1]) )
+                    except SyntaxError: pass
+            for d in from_db:
+                if all([d[0].get(k)==with_description[k] for k in with_description.keys()]):
+                       descriptions_to_keep.append(d[1])
+            for d in descriptions_to_keep:
+                desc_request += "id = "+str(d)+" or "
+            desc_request += ("id is null)")
+            with_description=None
+        if not(isinstance(source, tuple)):
+            source = (source,None)
         source = source != None and source or (None,None)
         with_text = with_text != None and '%' + with_text + '%' or None
-        sql = """select id from file where ((external_name like ? or ? is null) or (description like ? or ? is null))
+        sql = """select id from file where"""+ desc_request + """
+                                          and ((external_name like ? or ? is null) or (description like ? or ? is null))
                                           and (description like ? or ? is null)
                                           and (created >= ? or ? is null)
                                           and (created <= ? or ? is null)
@@ -1052,7 +1071,7 @@ class MiniLIMS(object):
                                                source[1], source[1]))
         return [x for (x,) in matching_files]
 
-    def search_executions(self, with_text=None, started_before=None,
+    def search_executions(self, with_text=None, with_description=None, started_before=None,
                           started_after=None, ended_before=None, ended_after=None):
         """Find executions matching the given criteria.
 
@@ -1063,9 +1082,9 @@ class MiniLIMS(object):
              program arguments in the execution contains *with_text*.
 
            * *started_before*: The execution started running before
-             *start_before*.  This should be of the form "YYYY:MM:DD
+             *start_before*.  This should be of the form "YYYY-MM-DD
              HH:MM:SS".  Final fields can be omitted, so "YYYY" and
-             "YYYY:MM:DD HH:MM" are also valid date formats.
+             "YYYY-MM-DD HH:MM" are also valid date formats.
 
            * *started_after*: The execution started running after
              *started_after*.  The format is identical to
@@ -1079,13 +1098,30 @@ class MiniLIMS(object):
              *ended_after*.  The format is the same as for
              *started_before*.
         """
+        desc_request = "(id is not null)"
+        if isinstance(with_description,dict):
+            sql = """select description,id from execution where length(description)>1 """
+            descriptions = self.db.execute(sql).fetchall()
+            from_db=[]; descriptions_to_keep=[]; desc_request="("
+            for d in descriptions:
+                if d[0][0] == '{':
+                    try: from_db.append( (eval(d[0]),d[1]) )
+                    except SyntaxError: pass
+            for d in from_db:
+                if all([d[0].get(k)==with_description[k] for k in with_description.keys()]):
+                       descriptions_to_keep.append(d[1])
+            for d in descriptions_to_keep:
+                desc_request += "id = "+str(d)+" or "
+            desc_request += ("id is null)")
+            with_description=None
         with_text = with_text != None and '%'+with_text+'%' or None
         sql = """select id from execution where 
                  (started_at <= ? or ? is null) and 
                  (started_at >= ? or ? is null) and
                  (finished_at <= ? or ? is null) and 
                  (finished_at >= ? or ? is null) and
-                 (description like ? or ? is null)
+                 (description like ? or ? is null) and
+                 ((working_directory like ? or ? is null) or (description like ? or ? is null))
               """
         matching_executions = [x for (x,) in 
                                self.db.execute(sql, 
@@ -1097,6 +1133,10 @@ class MiniLIMS(object):
                                                 ended_before,
                                                 ended_after, 
                                                 ended_after,
+                                                with_description,
+                                                with_description,
+                                                with_text,
+                                                with_text,
                                                 with_text,
                                                 with_text))]
         if with_text != None:
@@ -1276,6 +1316,8 @@ class MiniLIMS(object):
         the file in the repository.  ``import_file`` returns the file id
         in the repository of the newly imported file.
         """
+        if isinstance(description,dict): 
+            description = str(description)
         self.db.execute("""insert into file(external_name,repository_name,
                                             description,origin,origin_value)
                            values (?,importfile(?),?,?,?)""",
@@ -1296,7 +1338,6 @@ class MiniLIMS(object):
         """
         src = self.path_to_file(file_or_alias)
         shutil.copy(src, dst) 
-        print self.fetch_file(file_or_alias)
         if with_associated:
             if os.path.isdir(dst):
                 dst = os.path.join(dst, self.fetch_file(file_or_alias)['repository_name'])

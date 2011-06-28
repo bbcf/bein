@@ -153,8 +153,28 @@ class TestMiniLIMS(TestCase):
         f_id = M.import_file("../LICENSE", description=f_desc)
         t2 = time.strftime("%Y-%m-%d %H:%M:%S", time.gmtime())
         f_found = M.search_files(with_text="LICENSE", with_description=f_desc, older_than=t2, source="import", newer_than=t1)
-        M.delete_file(f_id)
         self.assertIn(f_id, f_found)
+        M.delete_file(f_id)
+        
+        f_desc = {"name":"test", "m":5, "n":15}
+        f_id = M.import_file("../LICENSE", description=f_desc)
+        f_found = M.search_files(with_description=f_desc)
+        self.assertIn(f_id, f_found)
+        M.delete_file(f_id)
+
+    def test_search_executions(self):
+        with execution(M, description="desc_test") as ex:
+            pass
+        ex_found = M.search_executions(with_description="desc_test")
+        self.assertIn(ex.id,ex_found)
+        M.delete_execution(ex.id)
+
+        f_desc = {"name":"test", "m":5, "n":15}
+        with execution(M, description=f_desc) as ex:
+            pass
+        ex_found = M.search_executions(with_description=f_desc)
+        self.assertIn(ex.id, ex_found)
+        M.delete_execution(ex.id)
 
 class TestExportFile(TestCase):
     def test_export_file(self):
@@ -198,7 +218,7 @@ class TestStdoutStderrRedirect(TestCase):
 
     def test_stdout_local_redirected(self):
         try:
-            with execution(None) as ex:
+            with execution(M) as ex:
                 f = unique_filename_in()
                 m = echo.nonblocking(ex, "boris!", stdout=f)
                 m.wait()
