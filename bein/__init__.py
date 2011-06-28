@@ -172,7 +172,6 @@ class program(object):
             b.wait()
 
     By default, ``nonblocking`` runs local processes, but you can
-
     control how it runs its processes with the ``via`` keyword
     argument.  For example, on systems using the LSF batch submission
     system,s you can run commands via batch submission by passing the
@@ -509,8 +508,7 @@ class Execution(object):
         filename is the name of the file in the execution's working
         directory to import.  description is an optional argument to
         assign a string to describe that file in the MiniLIMS
-        repository.  The function returns an integer, the file id of
-        the file in the MiniLIMS repository.
+        repository.
 
         Note that the file is not actually added to the repository
         until the execution finishes.
@@ -1020,6 +1018,9 @@ class MiniLIMS(object):
            * *with_text*: The file's external_name or description
              contains *with_text*
 
+           * *with_description*: The file's description contains 
+             *with_description*
+
            * *older_than*: The file's created time is earlier than
              *older_than*.  This should be of the form "YYYY-MM-DD
              HH:MM:SS".  Final fields can be omitted, so "YYYY" and
@@ -1080,6 +1081,9 @@ class MiniLIMS(object):
 
            * *with_text*: The execution's description or one of the
              program arguments in the execution contains *with_text*.
+
+           * *with_description*: The execution's description contains 
+             *with_description*
 
            * *started_before*: The execution started running before
              *start_before*.  This should be of the form "YYYY-MM-DD
