@@ -507,12 +507,13 @@ class Execution(object):
 
         filename is the name of the file in the execution's working
         directory to import.  description is an optional argument to
-        assign a string to describe that file in the MiniLIMS
+        assign a string or a dictionary to describe that file in the MiniLIMS
         repository.
 
         Note that the file is not actually added to the repository
         until the execution finishes.
         """
+	if isinstance(description,dict): description=str(description)
         if filename == None:
             if description == "":
                 raise(IOError("Tried to add None to repository."))
@@ -1072,39 +1073,6 @@ class MiniLIMS(object):
                                                source[1], source[1]))
         return [x for (x,) in matching_files]
 
-    def browse_executions(self, with_text=None, with_description=None, started_before=None,
-			  started_after=None, ended_before=None, ended_after=None):
-	"""
-	"""
-	with_text = with_text != None and '%'+with_text+'%' or None
-        sql = """select id,description,started_at,finished_at from execution where 
-                 (started_at <= ? or ? is null) and 
-                 (started_at >= ? or ? is null) and
-                 (finished_at <= ? or ? is null) and 
-                 (finished_at >= ? or ? is null) and
-                 (description like ? or ? is null) and
-                 ((working_directory like ? or ? is null) or (description like ? or ? is null))
-              """
-        matching_executions = [x for x in self.db.execute(sql, 
-              (started_before, started_before,
-               started_after, started_after,
-               ended_before, ended_before,
-               ended_after, ended_after,
-               with_description, with_description,
-               with_text, with_text, with_text, with_text))]
-        if with_text != None:
-            sql = """select distinct execution from argument
-                     where argument like ?"""
-            matching_programs = [x for (x,) in self.db.execute(sql, (with_text,))]
-        else:
-            matching_programs = []
-	matching_executions = matching_executions + matching_programs
-	out = "ID \t Description \t Started at \t Finished at \n"
-	for m in matching_executions:
-	    out += str(m[0])+"\t"+ m[1]+"\t"+ time.ctime(m[2])+"\t"+ time.ctime(m[3])+"\n"
-	print out
-        return matching_executions
-
     def search_executions(self, with_text=None, with_description=None, started_before=None,
                           started_after=None, ended_before=None, ended_after=None):
         """Find executions matching the given criteria.
@@ -1116,7 +1084,7 @@ class MiniLIMS(object):
              program arguments in the execution contains *with_text*.
 
            * *with_description*: The execution's description contains 
-             *with_description*
+             *with_description*.
 
            * *started_before*: The execution started running before
              *start_before*.  This should be of the form "YYYY-MM-DD
@@ -1184,6 +1152,42 @@ class MiniLIMS(object):
         else:
             matching_programs = []
         return list(set(matching_executions+matching_programs))
+
+    def browse_executions(self, with_text=None, with_description=None, started_before=None,
+			  started_after=None, ended_before=None, ended_after=None):
+	"""
+	Prints and returns a set of tuples (ID, description, started at, finished at),
+	one for each execution corresponding to the request.
+	See the documentation for search_executions().
+	"""
+	with_text = with_text != None and '%'+with_text+'%' or None
+        sql = """select id,description,started_at,finished_at from execution where 
+                 (started_at <= ? or ? is null) and 
+                 (started_at >= ? or ? is null) and
+                 (finished_at <= ? or ? is null) and 
+                 (finished_at >= ? or ? is null) and
+                 (description like ? or ? is null) and
+                 ((working_directory like ? or ? is null) or (description like ? or ? is null))
+              """
+        matching_executions = [x for x in self.db.execute(sql, 
+              (started_before, started_before,
+               started_after, started_after,
+               ended_before, ended_before,
+               ended_after, ended_after,
+               with_description, with_description,
+               with_text, with_text, with_text, with_text))]
+        if with_text != None:
+            sql = """select distinct execution from argument
+                     where argument like ?"""
+            matching_programs = [x for (x,) in self.db.execute(sql, (with_text,))]
+        else:
+            matching_programs = []
+	matching_executions = matching_executions + matching_programs
+	out = "ID \t Description \t Started at \t Finished at \n"
+	for m in matching_executions:
+	    out += str(m[0])+"\t"+ m[1]+"\t"+ time.ctime(m[2])+"\t"+ time.ctime(m[3])+"\n"
+	print out
+        return matching_executions
 
     def last_id(self):
         """Return the id of the last thing written to the repository."""
@@ -1349,7 +1353,7 @@ class MiniLIMS(object):
         """Add an external file *src* to the MiniLIMS repository.
 
         *src* should be the path to the file to be added.
-        *description* is an optional string that will be attached to
+        *description* is an optional string or dictionary that will be attached to
         the file in the repository.  ``import_file`` returns the file id
         in the repository of the newly imported file.
         """
