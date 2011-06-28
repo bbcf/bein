@@ -156,7 +156,7 @@ class TestMiniLIMS(TestCase):
         self.assertIn(f_id, f_found)
         M.delete_file(f_id)
         
-        f_desc = {"name":"test", "m":5, "n":15}
+        f_desc = {"name":"test_search_files_by_dict", "m":5, "n":15}
         f_id = M.import_file("../LICENSE", description=f_desc)
         f_found = M.search_files(with_description=f_desc)
         self.assertIn(f_id, f_found)
@@ -169,18 +169,20 @@ class TestMiniLIMS(TestCase):
         self.assertIn(ex.id,ex_found)
         M.delete_execution(ex.id)
 
-        f_desc = {"name":"test", "m":5, "n":15}
-        with execution(M, description=f_desc) as ex:
+        ex_desc = {"name":"test_search_ex_by_dict", "m":5, "n":15}
+        with execution(M, description=ex_desc) as ex:
             pass
-        ex_found = M.search_executions(with_description=f_desc)
+        ex_found = M.search_executions(with_description=ex_desc)
         self.assertIn(ex.id, ex_found)
         M.delete_execution(ex.id)
 
-    def test_search_executions_bydesc(self):
-        with execution(M, description="desc_test") as ex:
-            pass
-        ex_found = M.search_executions(with_description="desc_test")
-        self.assertIn(ex.id,ex_found)
+    def test_browse_executions(self):
+        ex_desc = "browse_ex_test"
+        with execution(M, description=ex_desc) as ex:
+            touch(ex,"boris")
+        ex_found = M.browse_executions(with_description=ex_desc)
+        M.delete_execution(ex.id)
+        
 
 class TestExportFile(TestCase):
     def test_export_file(self):

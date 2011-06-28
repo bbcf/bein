@@ -1072,6 +1072,39 @@ class MiniLIMS(object):
                                                source[1], source[1]))
         return [x for (x,) in matching_files]
 
+    def browse_executions(self, with_text=None, with_description=None, started_before=None,
+			  started_after=None, ended_before=None, ended_after=None):
+	"""
+	"""
+	with_text = with_text != None and '%'+with_text+'%' or None
+        sql = """select id,description,started_at,finished_at from execution where 
+                 (started_at <= ? or ? is null) and 
+                 (started_at >= ? or ? is null) and
+                 (finished_at <= ? or ? is null) and 
+                 (finished_at >= ? or ? is null) and
+                 (description like ? or ? is null) and
+                 ((working_directory like ? or ? is null) or (description like ? or ? is null))
+              """
+        matching_executions = [x for x in self.db.execute(sql, 
+              (started_before, started_before,
+               started_after, started_after,
+               ended_before, ended_before,
+               ended_after, ended_after,
+               with_description, with_description,
+               with_text, with_text, with_text, with_text))]
+        if with_text != None:
+            sql = """select distinct execution from argument
+                     where argument like ?"""
+            matching_programs = [x for (x,) in self.db.execute(sql, (with_text,))]
+        else:
+            matching_programs = []
+	matching_executions = matching_executions + matching_programs
+	out = "ID \t Description \t Started at \t Finished at \n"
+	for m in matching_executions:
+	    out += str(m[0])+"\t"+ m[1]+"\t"+ time.ctime(m[2])+"\t"+ time.ctime(m[3])+"\n"
+	print out
+        return matching_executions
+
     def search_executions(self, with_text=None, with_description=None, started_before=None,
                           started_after=None, ended_before=None, ended_after=None):
         """Find executions matching the given criteria.
