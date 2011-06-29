@@ -650,6 +650,8 @@ class MiniLIMS(object):
     Searching files and executions:      
       * :meth:`search_files`
       * :meth:`search_executions`
+      * :meth:`browse_files`
+      * :meth:`browse_executions`
 
     File aliases:
       * :meth:`resolve_alias`
@@ -1145,7 +1147,7 @@ class MiniLIMS(object):
 	"""
 	Prints and returns a set of tuples (ID, description, created at),
 	one for each file corresponding to the request.
-	See the documentation for search_files().
+	See documentation for search_files().
 	"""
         if not(isinstance(source, tuple)):
             source = (source,None)
@@ -1177,7 +1179,7 @@ class MiniLIMS(object):
 	"""
 	Prints and returns a set of tuples (ID, description, started at, finished at),
 	one for each execution corresponding to the request.
-	See the documentation for search_executions().
+	See documentation for search_executions().
 	"""
 	with_text = with_text != None and '%'+with_text+'%' or None
         sql = """select id,description,started_at,finished_at from execution where 
@@ -1196,8 +1198,7 @@ class MiniLIMS(object):
                with_description, with_description,
                with_text, with_text, with_text, with_text))]
         if with_text != None:
-            sql = """select distinct execution from argument
-                     where argument like ?"""
+            sql = """select distinct execution from argument where argument like ?"""
             matching_programs = [x for (x,) in self.db.execute(sql, (with_text,))]
         else:
             matching_programs = []
