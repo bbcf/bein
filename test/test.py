@@ -176,13 +176,19 @@ class TestMiniLIMS(TestCase):
         self.assertIn(ex.id, ex_found)
         M.delete_execution(ex.id)
 
+    def test_browse_files(self):
+        f_desc = "browse_file_test"
+        f_id = M.import_file("../LICENSE", description=f_desc)
+        f_found = M.browse_files(with_description=f_desc)
+        #self.assertIn(f_id,f_found)
+        M.delete_file(f_id)
     def test_browse_executions(self):
         ex_desc = "browse_ex_test"
         with execution(M, description=ex_desc) as ex:
             touch(ex,"boris")
         ex_found = M.browse_executions(with_description=ex_desc)
+        #self.assertIs(ex.id,ex_found)
         M.delete_execution(ex.id)
-        
 
 class TestExportFile(TestCase):
     def test_export_file(self):

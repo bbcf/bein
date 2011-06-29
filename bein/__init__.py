@@ -1049,26 +1049,26 @@ class MiniLIMS(object):
                        descriptions_to_keep.append(d[1])
             for d in descriptions_to_keep:
                 desc_request += "id = "+str(d)+" or "
-            desc_request += ("id is null)")
+            desc_request += "id is null)"
             with_description=None
         if not(isinstance(source, tuple)):
             source = (source,None)
         source = source != None and source or (None,None)
         with_text = with_text != None and '%' + with_text + '%' or None
-        sql = """select id from file where"""+ desc_request + """
-                                          and ((external_name like ? or ? is null) or (description like ? or ? is null))
-                                          and (description like ? or ? is null)
-                                          and (created >= ? or ? is null)
-                                          and (created <= ? or ? is null)
-                                          and (origin = ? or ? is null)
-                                          and (origin_value = ? or ? is null)"""
-        matching_files = self.db.execute(sql, (with_text, with_text,
-                                               with_text, with_text,
-                                               with_description, with_description,
-                                               newer_than, newer_than,
-                                               older_than, older_than,
-                                               source[0], source[0],
-                                               source[1], source[1]))
+        sql = """select id from file where""" + desc_request + """
+                 and ((external_name like ? or ? is null) or (description like ? or ? is null))
+                 and (description like ? or ? is null)
+                 and (created >= ? or ? is null)
+                 and (created <= ? or ? is null)
+                 and (origin = ? or ? is null)
+                 and (origin_value = ? or ? is null)"""
+        matching_files = self.db.execute(sql,
+             (with_text, with_text, with_text, with_text,
+              with_description, with_description,
+              newer_than, newer_than,
+              older_than, older_than,
+              source[0], source[0],
+              source[1], source[1]))
         return [x for (x,) in matching_files]
 
     def search_executions(self, with_text=None, with_description=None, started_before=None,
@@ -1115,41 +1115,62 @@ class MiniLIMS(object):
                        descriptions_to_keep.append(d[1])
             for d in descriptions_to_keep:
                 desc_request += "id = "+str(d)+" or "
-            desc_request += ("id is null)")
+            desc_request += "id is null)"
             with_description=None
         with_text = with_text != None and '%'+with_text+'%' or None
-        sql = """select id from execution where 
-                 (started_at <= ? or ? is null) and 
-                 (started_at >= ? or ? is null) and
-                 (finished_at <= ? or ? is null) and 
-                 (finished_at >= ? or ? is null) and
-                 (description like ? or ? is null) and
-                 ((working_directory like ? or ? is null) or (description like ? or ? is null))
+        sql = """select id from execution where""" + desc_request + """
+                 and (started_at <= ? or ? is null) 
+                 and (started_at >= ? or ? is null)
+                 and (finished_at <= ? or ? is null) 
+                 and (finished_at >= ? or ? is null)
+                 and (description like ? or ? is null)
+                 and ((working_directory like ? or ? is null) or (description like ? or ? is null))
               """
-        matching_executions = [x for (x,) in 
-                               self.db.execute(sql, 
-                                               (started_before,
-                                                started_before,
-                                                started_after,
-                                                started_after,
-                                                ended_before,
-                                                ended_before,
-                                                ended_after, 
-                                                ended_after,
-                                                with_description,
-                                                with_description,
-                                                with_text,
-                                                with_text,
-                                                with_text,
-                                                with_text))]
+        matching_executions = [x for (x,) in self.db.execute(sql, 
+              (started_before, started_before,
+               started_after, started_after,
+               ended_before, ended_before,
+               ended_after, ended_after,
+               with_description, with_description,
+               with_text, with_text,
+               with_text, with_text))]
         if with_text != None:
-            sql = """select distinct execution from argument
-                     where argument like ?"""
-            matching_programs = [x for (x,) in 
-                                 self.db.execute(sql, (with_text,))]
+            sql = """select distinct execution from argument where argument like ?"""
+            matching_programs = [x for (x,) in self.db.execute(sql, (with_text,))]
         else:
             matching_programs = []
         return list(set(matching_executions+matching_programs))
+
+    def browse_files(self, with_text=None, with_description=None, older_than=None, newer_than=None, source=None):
+	"""
+	Prints and returns a set of tuples (ID, description, created at),
+	one for each file corresponding to the request.
+	See the documentation for search_files().
+	"""
+        if not(isinstance(source, tuple)):
+            source = (source,None)
+        source = source != None and source or (None,None)
+	with_text = with_text != None and '%'+with_text+'%' or None
+        sql = """select id,description,created from file where 
+                     ((external_name like ? or ? is null) or (description like ? or ? is null))
+                 and (description like ? or ? is null)
+                 and (created >= ? or ? is null)
+                 and (created <= ? or ? is null)
+                 and (origin = ? or ? is null)
+                 and (origin_value = ? or ? is null)
+              """
+        matching_files = self.db.execute(sql, (with_text, with_text,
+                                               with_text, with_text,
+                                               with_description, with_description,
+                                               newer_than, newer_than,
+                                               older_than, older_than,
+                                               source[0], source[0],
+                                               source[1], source[1]))
+	out = "ID \t Description \t Created at \n"
+	for m in matching_files:
+	    out += str(m[0])+"\t"+ m[1]+"\t"+m[2]+"\n"
+	print out
+        return matching_files
 
     def browse_executions(self, with_text=None, with_description=None, started_before=None,
 			  started_after=None, ended_before=None, ended_after=None):
