@@ -487,6 +487,7 @@ def add_pickle(execution, val, description="", alias=None):
     calculations.  *description* will be set as the pickle file's
     description.
     """
+    if isinstance(description,dict): description = str(description)
     filename = unique_filename_in()
     with open(filename, 'wb') as f:
         pickle.dump(val, f)
@@ -508,6 +509,7 @@ try:
         This will plot a histogram of a with the x axis label set, and
         write the plot to the repository as an EPS file.
         """
+        if isinstance(description,dict): description = str(description)
         f = pylab.figure(figsize=figure_size)
         yield f
         filename = unique_filename_in() + '.' + figure_type
@@ -524,6 +526,7 @@ def add_and_index_bam(ex, bamfile, description="", alias=None):
     repository, so when you use the BAM file later, the index will
     also be copied into place with the correct name.
     """
+    if isinstance(description,dict): description = str(description)
     sort = sort_bam(ex, bamfile)
     index = index_bam(ex, sort)
     ex.add(sort, description=description, alias=alias)
@@ -545,6 +548,7 @@ def add_bowtie_index(execution, files, description="", alias=None, index=None):
     be referred to by name in future.  *index* lets you set the actual
     name of the index created.
     """
+    if isinstance(description,dict): description = str(description)
     index = bowtie_build(execution, files, index=index)
     touch(execution, index)
     execution.add(index, description=description, alias=alias)
@@ -560,6 +564,7 @@ try:
     import tables as h5
     @contextmanager
     def add_hdf5(ex, description='', alias=None):
+        if isinstance(description,dict): description = str(description)
         h5filename = unique_filename_in()
         db = h5.openFile(h5filename, 'w', title=description)
         try:

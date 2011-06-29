@@ -114,8 +114,6 @@ def unique_filename_in(path=None):
     return filename
 
 
-# programs
-
 class program(object):
     """Decorator to wrap external programs for use by bein.
 
