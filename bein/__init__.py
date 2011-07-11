@@ -1074,7 +1074,7 @@ class MiniLIMS(object):
         return [x for (x,) in matching_files]
 
     def search_executions(self, with_text=None, with_description=None, started_before=None,
-                          started_after=None, ended_before=None, ended_after=None):
+                          started_after=None, ended_before=None, ended_after=None, keep_erroneous=None):
         """Find executions matching the given criteria.
 
         Returns a list of execution ids of executions which satisfy
@@ -1102,10 +1102,14 @@ class MiniLIMS(object):
            * *ended_after*: The execution finished running after
              *ended_after*.  The format is the same as for
              *started_before*.
+
+	   * *keep_erroneous*: If 'TRUE', returns execution even if exit status is not null, i.e. execution.exception is null or not null.
+
+
         """
         desc_request = "(id is not null)"
         if isinstance(with_description,dict):
-            sql = """select description,id from execution where length(description)>1 """
+            sql = """select description,id from execution where length(description)>1"""
             descriptions = self.db.execute(sql).fetchall()
             from_db=[]; descriptions_to_keep=[]; desc_request="("
             for d in descriptions:
@@ -1125,6 +1129,7 @@ class MiniLIMS(object):
                  and (started_at >= ? or ? is null)
                  and (finished_at <= ? or ? is null) 
                  and (finished_at >= ? or ? is null)
+                 and (exception is null or ? > 1)
                  and (description like ? or ? is null)
                  and ((working_directory like ? or ? is null) or (description like ? or ? is null))
               """
@@ -1133,6 +1138,7 @@ class MiniLIMS(object):
                started_after, started_after,
                ended_before, ended_before,
                ended_after, ended_after,
+               keep_erroneous, 
                with_description, with_description,
                with_text, with_text,
                with_text, with_text))]
@@ -1141,7 +1147,7 @@ class MiniLIMS(object):
             matching_programs = [x for (x,) in self.db.execute(sql, (with_text,))]
         else:
             matching_programs = []
-        return list(set(matching_executions+matching_programs))
+        return sorted(list(set(matching_executions+matching_programs)))[::-1]
 
     def browse_files(self, with_text=None, with_description=None, older_than=None, newer_than=None, source=None):
 	"""
