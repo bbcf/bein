@@ -1074,7 +1074,7 @@ class MiniLIMS(object):
         return [x for (x,) in matching_files]
 
     def search_executions(self, with_text=None, with_description=None, started_before=None,
-                          started_after=None, ended_before=None, ended_after=None, nofail=False):
+                          started_after=None, ended_before=None, ended_after=None, fails=None):
         """Find executions matching the given criteria.
 
         Returns a list of execution ids of executions which satisfy
@@ -1103,11 +1103,12 @@ class MiniLIMS(object):
              *ended_after*.  The format is the same as for
              *started_before*.
 
-	   * *nofail*: If 'True', returns execution only if it didn't
+	   * *fails*: If 'False', returns only executions that didn't
              encounter any error, i.e. execution.exception not null.
-             Warning: any try/except block inside the execution will
-             cause execution.exception not to be null, so it will be hidden
-             by this command.
+             If 'True', returns only executions with errors.
+             Warning: any try/except block inside an execution may
+             cause execution.exception not to be null without making
+             fail the script itself.
         """
 
         desc_request = "(id is not null)"
@@ -1126,8 +1127,10 @@ class MiniLIMS(object):
                 desc_request += "id = "+str(d)+" or "
             desc_request += "id is null)"
             with_description=None
-        if nofail == True:
+        if fails == False:
             desc_request += " and (exception is null) "
+        elif fails == True:
+            desc_request += " and (exception is not null) "
         with_text = with_text != None and '%'+with_text+'%' or None
         sql = """select id from execution where""" + desc_request + """
                  and (started_at <= ? or ? is null) 

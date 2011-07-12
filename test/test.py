@@ -179,10 +179,14 @@ class TestMiniLIMS(TestCase):
             with execution(M, description="desc_test_fail") as ex_nofail:
                 3/0
         except: pass
-        ex_found_nofail = M.search_executions(with_description="desc_test", nofail=True)
+        ex_found_nofail = M.search_executions(with_description="desc_test", fails=False)
         for e in ex_found_nofail:
             error = M.fetch_execution(e)["exception_string"]
             self.assertIsNone(error)
+        ex_found_fail = M.search_executions(with_description="desc_test", fails=True)
+        for e in ex_found:
+            error = M.fetch_execution(e)["exception_string"]
+            self.assertIsNotNone(error)
         M.delete_execution(ex.id)
         M.delete_execution(ex_nofail.id)
 
