@@ -161,7 +161,7 @@ class TestMiniLIMS(TestCase):
         f_found = M.search_files(with_description=f_desc)
         self.assertIn(f_id, f_found)
         M.delete_file(f_id)
-
+        
     def test_search_executions(self):
         with execution(M, description="desc_test") as ex:
             pass
@@ -174,7 +174,17 @@ class TestMiniLIMS(TestCase):
             pass
         ex_found = M.search_executions(with_description=ex_desc)
         self.assertIn(ex.id, ex_found)
+        
+        try:
+            with execution(M, description="desc_test_fail") as ex_nofail:
+                3/0
+        except: pass
+        ex_found_nofail = M.search_executions(with_description="desc_test", nofail=True)
+        for e in ex_found_nofail:
+            error = M.fetch_execution(e)["exception_string"]
+            self.assertIsNone(error)
         M.delete_execution(ex.id)
+        M.delete_execution(ex_nofail.id)
 
     def test_browse_files(self):
         f_desc = "browse_file_test"
@@ -182,6 +192,7 @@ class TestMiniLIMS(TestCase):
         f_found = M.browse_files(with_description=f_desc)
         #self.assertIn(f_id,f_found)
         M.delete_file(f_id)
+        
     def test_browse_executions(self):
         ex_desc = "browse_ex_test"
         with execution(M, description=ex_desc) as ex:
