@@ -600,7 +600,7 @@ def execution(lims = None, description="", remote_working_directory=None):
         ex.remote_working_directory = os.path.join(remote_working_directory,
                                                    execution_dir)
     os.chdir(os.path.join(os.getcwd(), execution_dir))
-    exception_string = None
+    exception_string = True
     try:
         yield ex
     except:
@@ -1074,7 +1074,7 @@ class MiniLIMS(object):
         return [x for (x,) in matching_files]
 
     def search_executions(self, with_text=None, with_description=None, started_before=None,
-                          started_after=None, ended_before=None, ended_after=None, keep_erroneous=None):
+                          started_after=None, ended_before=None, ended_after=None, fails=None):
         """Find executions matching the given criteria.
 
         Returns a list of execution ids of executions which satisfy
@@ -1103,10 +1103,14 @@ class MiniLIMS(object):
              *ended_after*.  The format is the same as for
              *started_before*.
 
-	   * *keep_erroneous*: If 'TRUE', returns execution even if exit status is not null, i.e. execution.exception is null or not null.
-
-
+	   * *fails*: If 'False', returns only executions that didn't
+             encounter any error, i.e. execution.exception not null.
+             If 'True', returns only executions with errors.
+             Warning: any try/except block inside an execution may
+             cause execution.exception not to be null without making
+             fail the script itself.
         """
+
         desc_request = "(id is not null)"
         if isinstance(with_description,dict):
             sql = """select description,id from execution where length(description)>1"""
@@ -1123,13 +1127,16 @@ class MiniLIMS(object):
                 desc_request += "id = "+str(d)+" or "
             desc_request += "id is null)"
             with_description=None
+        if fails == False:
+            desc_request += " and (exception is null) "
+        elif fails == True:
+            desc_request += " and (exception is not null) "
         with_text = with_text != None and '%'+with_text+'%' or None
         sql = """select id from execution where""" + desc_request + """
                  and (started_at <= ? or ? is null) 
                  and (started_at >= ? or ? is null)
                  and (finished_at <= ? or ? is null) 
                  and (finished_at >= ? or ? is null)
-                 and (exception is null or ? > 1)
                  and (description like ? or ? is null)
                  and ((working_directory like ? or ? is null) or (description like ? or ? is null))
               """
@@ -1138,7 +1145,6 @@ class MiniLIMS(object):
                started_after, started_after,
                ended_before, ended_before,
                ended_after, ended_after,
-               keep_erroneous, 
                with_description, with_description,
                with_text, with_text,
                with_text, with_text))]
