@@ -347,15 +347,18 @@ def sam_to_bam(sam_filename):
             "return_value": bam_filename}
 
 @program
-def bam_to_sam(bam_filename):
+def bam_to_sam(bam_filename, no_header=None):
     """Convert *bam_filename* to a SAM file.
-
-    Equivalent: ``samtools view -h bam_filename ...``
+    
+    Equivalent: ``samtools view [-h] bam_filename ...``
     """
     sam_filename = unique_filename_in()
-    return {'arguments': ['samtools','view','-h','-o',sam_filename,bam_filename],
-            'return_value': sam_filename}
-
+    if no_header==None:
+        return {'arguments': ['samtools','view','-h','-o',sam_filename,bam_filename],
+                'return_value': sam_filename}
+    elif no_header==True :
+         return {'arguments': ['samtools','view','-o',sam_filename,bam_filename],
+                'return_value': sam_filename}
 @program
 def replace_bam_header(header, bamfile):
     """Replace the header of *bamfile* with that in *header*

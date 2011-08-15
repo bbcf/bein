@@ -600,7 +600,7 @@ def execution(lims = None, description="", remote_working_directory=None):
         ex.remote_working_directory = os.path.join(remote_working_directory,
                                                    execution_dir)
     os.chdir(os.path.join(os.getcwd(), execution_dir))
-    exception_string = None
+    exception_string = True
     try:
         yield ex
     except:
@@ -1074,7 +1074,7 @@ class MiniLIMS(object):
         return [x for (x,) in matching_files]
 
     def search_executions(self, with_text=None, with_description=None, started_before=None,
-                          started_after=None, ended_before=None, ended_after=None):
+                          started_after=None, ended_before=None, ended_after=None, fails=None):
         """Find executions matching the given criteria.
 
         Returns a list of execution ids of executions which satisfy
@@ -1102,10 +1102,18 @@ class MiniLIMS(object):
            * *ended_after*: The execution finished running after
              *ended_after*.  The format is the same as for
              *started_before*.
+
+	   * *fails*: If 'False', returns only executions that didn't
+             encounter any error, i.e. execution.exception not null.
+             If 'True', returns only executions with errors.
+             Warning: any try/except block inside an execution may
+             cause execution.exception not to be null without making
+             fail the script itself.
         """
+
         desc_request = "(id is not null)"
         if isinstance(with_description,dict):
-            sql = """select description,id from execution where length(description)>1 """
+            sql = """select description,id from execution where length(description)>1"""
             descriptions = self.db.execute(sql).fetchall()
             from_db=[]; descriptions_to_keep=[]; desc_request="("
             for d in descriptions:
@@ -1119,6 +1127,10 @@ class MiniLIMS(object):
                 desc_request += "id = "+str(d)+" or "
             desc_request += "id is null)"
             with_description=None
+        if fails == False:
+            desc_request += " and (exception is null) "
+        elif fails == True:
+            desc_request += " and (exception is not null) "
         with_text = with_text != None and '%'+with_text+'%' or None
         sql = """select id from execution where""" + desc_request + """
                  and (started_at <= ? or ? is null) 
@@ -1141,7 +1153,7 @@ class MiniLIMS(object):
             matching_programs = [x for (x,) in self.db.execute(sql, (with_text,))]
         else:
             matching_programs = []
-        return list(set(matching_executions+matching_programs))
+        return sorted(list(set(matching_executions+matching_programs)))[::-1]
 
     def browse_files(self, with_text=None, with_description=None, older_than=None, newer_than=None, source=None):
 	"""
