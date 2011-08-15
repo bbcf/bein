@@ -1161,13 +1161,13 @@ class MiniLIMS(object):
                  and (origin = ? or ? is null)
                  and (origin_value = ? or ? is null)
               """
-        matching_files = self.db.execute(sql, (with_text, with_text,
-                                               with_text, with_text,
-                                               with_description, with_description,
-                                               newer_than, newer_than,
-                                               older_than, older_than,
-                                               source[0], source[0],
-                                               source[1], source[1]))
+        matching_files = self.db.execute(sql,
+              (with_text, with_text, with_text, with_text,
+               with_description, with_description,
+               newer_than, newer_than,
+               older_than, older_than,
+               source[0], source[0],
+               source[1], source[1]))
 	out = "ID \t Description \t Created at \n"
 	for m in matching_files:
 	    out += str(m[0])+"\t"+ m[1]+"\t"+m[2]+"\n"
