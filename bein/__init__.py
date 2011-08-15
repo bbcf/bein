@@ -600,7 +600,7 @@ def execution(lims = None, description="", remote_working_directory=None):
         ex.remote_working_directory = os.path.join(remote_working_directory,
                                                    execution_dir)
     os.chdir(os.path.join(os.getcwd(), execution_dir))
-    exception_string = True
+    exception_string = None
     try:
         yield ex
     except:
