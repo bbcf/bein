@@ -6,7 +6,7 @@ setup(name='bein',
       author='Fred Ross',
       author_email='madhadron@gmail.com',
       packages=['bein'],
-      scripts=['add_nh_flag'],
+#      scripts=['add_nh_flag'],
       classifiers=['Topic :: System :: Shells', 'Topic :: Scientific/Engineering :: Bio-Informatics'],
       install_requires = ['unittest2'],
       )

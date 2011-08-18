@@ -48,6 +48,8 @@
 
     .. automethod:: search_executions
 
+    .. automethod:: browse_executions
+
     .. automethod:: search_files
 
   Programs
