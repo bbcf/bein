@@ -1,0 +1,1263 @@
+<?xml version="1.0" encoding="ascii"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+          "DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <title>bein.MiniLIMS</title>
+  <link rel="stylesheet" href="epydoc.css" type="text/css" />
+  <script type="text/javascript" src="epydoc.js"></script>
+</head>
+
+<body bgcolor="white" text="black" link="blue" vlink="#204080"
+      alink="#204080">
+<!-- ==================== NAVIGATION BAR ==================== -->
+<table class="navbar" border="0" width="100%" cellpadding="0"
+       bgcolor="#a0c0ff" cellspacing="0">
+  <tr valign="middle">
+  <!-- Home link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="bein-module.html">Home</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Tree link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="module-tree.html">Trees</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Index link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="identifier-index.html">Indices</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Help link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="help.html">Help</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Project homepage -->
+      <th class="navbar" align="right" width="100%">
+        <table border="0" cellpadding="0" cellspacing="0">
+          <tr><th class="navbar" align="center"
+            ><a class="navbar" target="_top" href="http://bbcf.epfl.ch/bein">bein</a></th>
+          </tr></table></th>
+  </tr>
+</table>
+<table width="100%" cellpadding="0" cellspacing="0">
+  <tr valign="top">
+    <td width="100%">
+      <span class="breadcrumbs">
+        <a href="bein-module.html">Package&nbsp;bein</a> ::
+        Class&nbsp;MiniLIMS
+      </span>
+    </td>
+    <td>
+      <table cellpadding="0" cellspacing="0">
+        <!-- hide/show private -->
+        <tr><td align="right"><span class="options">[<a href="javascript:void(0);" class="privatelink"
+    onclick="toggle_private();">hide&nbsp;private</a>]</span></td></tr>
+        <tr><td align="right"><span class="options"
+            >[<a href="frames.html" target="_top">frames</a
+            >]&nbsp;|&nbsp;<a href="bein.MiniLIMS-class.html"
+            target="_top">no&nbsp;frames</a>]</span></td></tr>
+      </table>
+    </td>
+  </tr>
+</table>
+<!-- ==================== CLASS DESCRIPTION ==================== -->
+<h1 class="epydoc">Class MiniLIMS</h1><p class="nomargin-top"></p>
+<center>
+<center>  <map id="uml_class_diagram_for_bein_min" name="uml_class_diagram_for_bein_min">
+<area shape="rect" id="node1" href="bein.MiniLIMS-class.html#__init__" title="x.__init__(...) initializes x; see x.__class__.__doc__ for signature" alt="" coords="17,39,929,57"/>
+<area shape="rect" id="node1" href="bein.MiniLIMS-class.html#add_alias" title="Make the string *alias* an alias for *fileid* in the repository." alt="" coords="17,57,929,76"/>
+<area shape="rect" id="node1" href="bein.MiniLIMS-class.html#associate_file" title="Add a file association from *file_or_alias* to *associate_to*." alt="" coords="17,76,929,95"/>
+<area shape="rect" id="node1" href="bein.MiniLIMS-class.html#associated_files_of" title="Find all files associated to *file_or_alias*." alt="" coords="17,95,929,113"/>
+<area shape="rect" id="node1" href="bein.MiniLIMS-class.html#browse_executions" title="Prints and returns a set of tuples (ID, description, started at, finished &#160;at), one for each execution corresponding to the request." alt="" coords="17,113,929,132"/>
+<area shape="rect" id="node1" href="bein.MiniLIMS-class.html#copy_file" title="Copy the given file in the MiniLIMS repository." alt="" coords="17,132,929,151"/>
+<area shape="rect" id="node1" href="bein.MiniLIMS-class.html#delete_alias" title="Delete the alias *alias* from the repository." alt="" coords="17,151,929,169"/>
+<area shape="rect" id="node1" href="bein.MiniLIMS-class.html#delete_execution" title="Delete an execution from the MiniLIMS repository." alt="" coords="17,169,929,188"/>
+<area shape="rect" id="node1" href="bein.MiniLIMS-class.html#delete_file" title="Delete a file from the repository." alt="" coords="17,188,929,207"/>
+<area shape="rect" id="node1" href="bein.MiniLIMS-class.html#delete_file_association" title="Remove the file association from *file_or_alias* to *associated_to*." alt="" coords="17,207,929,225"/>
+<area shape="rect" id="node1" href="bein.MiniLIMS-class.html#export_file" title="Write *file_or_alias* from the MiniLIMS repository to *dst*." alt="" coords="17,225,929,244"/>
+<area shape="rect" id="node1" href="bein.MiniLIMS-class.html#fetch_execution" title="Returns a dictionary of all the data corresponding to the given execution &#160;id." alt="" coords="17,244,929,263"/>
+<area shape="rect" id="node1" href="bein.MiniLIMS-class.html#fetch_file" title="Returns a dictionary describing the given file." alt="" coords="17,263,929,281"/>
+<area shape="rect" id="node1" href="bein.MiniLIMS-class.html#write" title="Write an execution to the MiniLIMS." alt="" coords="17,300,929,319"/>
+<area shape="rect" id="node1" href="bein.MiniLIMS-class.html" title="Encapsulates a database and directory to track executions and files." alt="" coords="5,6,941,325"/>
+</map>
+  <img src="uml_class_diagram_for_bein_min.gif" alt='' usemap="#uml_class_diagram_for_bein_min" ismap="ismap" class="graph-without-title" />
+</center>
+</center>
+<hr />
+<pre class="literalblock">
+Encapsulates a database and directory to track executions and files.
+
+A MiniLIMS repository consists of a SQLite database and a
+directory of the same name with ``.files`` appended where all files
+kept in the repository are stored.  For example, if the SQLite
+database is ``/home/boris/myminilims``, then there is a directory
+``/home/boris/myminilims.files`` with all the corresponding files.
+You should never edit the repository by hand!.
+
+If you create a MiniLIMS object pointing to a nonexistent
+database, then it creates the database and the file directory.
+
+Basic file operations:
+  * :meth:`import_file`
+  * :meth:`export_file`
+  * :meth:`path_to_file`
+  * :meth:`copy_file`
+
+Fetching files and executions:
+  * :meth:`fetch_file`
+  * :meth:`fetch_execution`
+
+Deleting files and executions:
+  * :meth:`delete_file`
+  * :meth:`delete_execution`
+
+Searching files and executions:      
+  * :meth:`search_files`
+  * :meth:`search_executions`
+
+File aliases:
+  * :meth:`resolve_alias`
+  * :meth:`add_alias`
+  * :meth:`delete_alias`
+
+File associations:      
+  * :meth:`associate_file`
+  * :meth:`delete_file_association`
+  * :meth:`associated_files_of`
+
+</pre>
+
+<!-- ==================== INSTANCE METHODS ==================== -->
+<a name="section-InstanceMethods"></a>
+<table class="summary" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr bgcolor="#70b0f0" class="table-header">
+  <td colspan="2" class="table-header">
+    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+      <tr valign="top">
+        <td align="left"><span class="table-header">Instance Methods</span></td>
+        <td align="right" valign="top"
+         ><span class="options">[<a href="#section-InstanceMethods"
+         class="privatelink" onclick="toggle_private();"
+         >hide private</a>]</span></td>
+      </tr>
+    </table>
+  </td>
+</tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a href="bein.MiniLIMS-class.html#__init__" class="summary-sig-name">__init__</a>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">path</span>)</span><br />
+      x.__init__(...) initializes x; see x.__class__.__doc__ for signature</td>
+          <td align="right" valign="top">
+            
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr class="private">
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="_associate_file"></a><span class="summary-sig-name">_associate_file</span>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">thisid</span>,
+        <span class="summary-sig-arg">targetid</span>,
+        <span class="summary-sig-arg">template</span>)</span></td>
+          <td align="right" valign="top">
+            
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr class="private">
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a href="bein.MiniLIMS-class.html#_copy_file_to_repository" class="summary-sig-name" onclick="show_private();">_copy_file_to_repository</a>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">src</span>)</span><br />
+      Copy a file src into the MiniLIMS repository.</td>
+          <td align="right" valign="top">
+            
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr class="private">
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a href="bein.MiniLIMS-class.html#_delete_repository_file" class="summary-sig-name" onclick="show_private();">_delete_repository_file</a>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">filename</span>)</span><br />
+      Delete a file from the MiniLIMS repository.</td>
+          <td align="right" valign="top">
+            
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr class="private">
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a href="bein.MiniLIMS-class.html#_export_file_from_repository" class="summary-sig-name" onclick="show_private();">_export_file_from_repository</a>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">fileid</span>,
+        <span class="summary-sig-arg">dst</span>)</span><br />
+      Write a file with id fileid to the directory dst.</td>
+          <td align="right" valign="top">
+            
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr class="private">
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="_insert_file"></a><span class="summary-sig-name">_insert_file</span>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">ex</span>,
+        <span class="summary-sig-arg">exid</span>,
+        <span class="summary-sig-arg">filename</span>,
+        <span class="summary-sig-arg">description</span>)</span></td>
+          <td align="right" valign="top">
+            
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr class="private">
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="_rename_in_repository"></a><span class="summary-sig-name">_rename_in_repository</span>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">fileid</span>,
+        <span class="summary-sig-arg">new_repository_name</span>)</span></td>
+          <td align="right" valign="top">
+            
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a href="bein.MiniLIMS-class.html#add_alias" class="summary-sig-name">add_alias</a>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">fileid</span>,
+        <span class="summary-sig-arg">alias</span>)</span><br />
+      Make the string *alias* an alias for *fileid* in the repository.</td>
+          <td align="right" valign="top">
+            
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a href="bein.MiniLIMS-class.html#associate_file" class="summary-sig-name">associate_file</a>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">file_or_alias</span>,
+        <span class="summary-sig-arg">associate_to</span>,
+        <span class="summary-sig-arg">template</span>)</span><br />
+      Add a file association from *file_or_alias* to *associate_to*.</td>
+          <td align="right" valign="top">
+            
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a href="bein.MiniLIMS-class.html#associated_files_of" class="summary-sig-name">associated_files_of</a>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">file_or_alias</span>)</span><br />
+      Find all files associated to *file_or_alias*.</td>
+          <td align="right" valign="top">
+            
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a href="bein.MiniLIMS-class.html#browse_executions" class="summary-sig-name">browse_executions</a>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">with_text</span>=<span class="summary-sig-default">None</span>,
+        <span class="summary-sig-arg">with_description</span>=<span class="summary-sig-default">None</span>,
+        <span class="summary-sig-arg">started_before</span>=<span class="summary-sig-default">None</span>,
+        <span class="summary-sig-arg">started_after</span>=<span class="summary-sig-default">None</span>,
+        <span class="summary-sig-arg">ended_before</span>=<span class="summary-sig-default">None</span>,
+        <span class="summary-sig-arg">ended_after</span>=<span class="summary-sig-default">None</span>)</span><br />
+      Prints and returns a set of tuples (ID, description, started at, 
+      finished at), one for each execution corresponding to the request.</td>
+          <td align="right" valign="top">
+            
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a href="bein.MiniLIMS-class.html#copy_file" class="summary-sig-name">copy_file</a>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">file_or_alias</span>)</span><br />
+      Copy the given file in the MiniLIMS repository.</td>
+          <td align="right" valign="top">
+            
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a href="bein.MiniLIMS-class.html#delete_alias" class="summary-sig-name">delete_alias</a>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">alias</span>)</span><br />
+      Delete the alias *alias* from the repository.</td>
+          <td align="right" valign="top">
+            
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="delete_execution"></a><span class="summary-sig-name">delete_execution</span>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">execution_id</span>)</span><br />
+      Delete an execution from the MiniLIMS repository.</td>
+          <td align="right" valign="top">
+            
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="delete_file"></a><span class="summary-sig-name">delete_file</span>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">file_or_alias</span>)</span><br />
+      Delete a file from the repository.</td>
+          <td align="right" valign="top">
+            
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a href="bein.MiniLIMS-class.html#delete_file_association" class="summary-sig-name">delete_file_association</a>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">file_or_alias</span>,
+        <span class="summary-sig-arg">associated_to</span>)</span><br />
+      Remove the file association from *file_or_alias* to *associated_to*.</td>
+          <td align="right" valign="top">
+            
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a href="bein.MiniLIMS-class.html#export_file" class="summary-sig-name">export_file</a>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">file_or_alias</span>,
+        <span class="summary-sig-arg">dst</span>,
+        <span class="summary-sig-arg">with_associated</span>=<span class="summary-sig-default">False</span>)</span><br />
+      Write *file_or_alias* from the MiniLIMS repository to *dst*.</td>
+          <td align="right" valign="top">
+            
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="fetch_execution"></a><span class="summary-sig-name">fetch_execution</span>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">exid</span>)</span><br />
+      Returns a dictionary of all the data corresponding to the given 
+      execution id.</td>
+          <td align="right" valign="top">
+            
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="fetch_file"></a><span class="summary-sig-name">fetch_file</span>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">id_or_alias</span>)</span><br />
+      Returns a dictionary describing the given file.</td>
+          <td align="right" valign="top">
+            
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a href="bein.MiniLIMS-class.html#import_file" class="summary-sig-name">import_file</a>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">src</span>,
+        <span class="summary-sig-arg">description</span>=<span class="summary-sig-default"><code class="variable-quote">'</code><code class="variable-string"></code><code class="variable-quote">'</code></span>)</span><br />
+      Add an external file *src* to the MiniLIMS repository.</td>
+          <td align="right" valign="top">
+            
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="initialize_database"></a><span class="summary-sig-name">initialize_database</span>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">db</span>)</span><br />
+      Sets up a new MiniLIMS database.</td>
+          <td align="right" valign="top">
+            
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="last_id"></a><span class="summary-sig-name">last_id</span>(<span class="summary-sig-arg">self</span>)</span><br />
+      Return the id of the last thing written to the repository.</td>
+          <td align="right" valign="top">
+            
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a href="bein.MiniLIMS-class.html#path_to_file" class="summary-sig-name">path_to_file</a>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">file_or_alias</span>)</span><br />
+      Return the full path to a file in the repository.</td>
+          <td align="right" valign="top">
+            
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a href="bein.MiniLIMS-class.html#resolve_alias" class="summary-sig-name">resolve_alias</a>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">alias</span>)</span><br />
+      Resolve an alias to an integer file id.</td>
+          <td align="right" valign="top">
+            
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a href="bein.MiniLIMS-class.html#search_executions" class="summary-sig-name">search_executions</a>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">with_text</span>=<span class="summary-sig-default">None</span>,
+        <span class="summary-sig-arg">with_description</span>=<span class="summary-sig-default">None</span>,
+        <span class="summary-sig-arg">started_before</span>=<span class="summary-sig-default">None</span>,
+        <span class="summary-sig-arg">started_after</span>=<span class="summary-sig-default">None</span>,
+        <span class="summary-sig-arg">ended_before</span>=<span class="summary-sig-default">None</span>,
+        <span class="summary-sig-arg">ended_after</span>=<span class="summary-sig-default">None</span>)</span><br />
+      Find executions matching the given criteria.</td>
+          <td align="right" valign="top">
+            
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a href="bein.MiniLIMS-class.html#search_files" class="summary-sig-name">search_files</a>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">with_text</span>=<span class="summary-sig-default">None</span>,
+        <span class="summary-sig-arg">with_description</span>=<span class="summary-sig-default">None</span>,
+        <span class="summary-sig-arg">older_than</span>=<span class="summary-sig-default">None</span>,
+        <span class="summary-sig-arg">newer_than</span>=<span class="summary-sig-default">None</span>,
+        <span class="summary-sig-arg">source</span>=<span class="summary-sig-default">None</span>)</span><br />
+      Find files matching given criteria in the LIMS.</td>
+          <td align="right" valign="top">
+            
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a href="bein.MiniLIMS-class.html#write" class="summary-sig-name">write</a>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">ex</span>,
+        <span class="summary-sig-arg">description</span>=<span class="summary-sig-default"><code class="variable-quote">'</code><code class="variable-string"></code><code class="variable-quote">'</code></span>,
+        <span class="summary-sig-arg">exception_string</span>=<span class="summary-sig-default">None</span>)</span><br />
+      Write an execution to the MiniLIMS.</td>
+          <td align="right" valign="top">
+            
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+  <tr>
+    <td colspan="2" class="summary">
+    <p class="indent-wrapped-lines"><b>Inherited from <code>object</code></b>:
+      <code>__delattr__</code>,
+      <code>__format__</code>,
+      <code>__getattribute__</code>,
+      <code>__hash__</code>,
+      <code>__new__</code>,
+      <code>__reduce__</code>,
+      <code>__reduce_ex__</code>,
+      <code>__repr__</code>,
+      <code>__setattr__</code>,
+      <code>__sizeof__</code>,
+      <code>__str__</code>,
+      <code>__subclasshook__</code>
+      </p>
+    </td>
+  </tr>
+</table>
+<!-- ==================== PROPERTIES ==================== -->
+<a name="section-Properties"></a>
+<table class="summary" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr bgcolor="#70b0f0" class="table-header">
+  <td colspan="2" class="table-header">
+    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+      <tr valign="top">
+        <td align="left"><span class="table-header">Properties</span></td>
+        <td align="right" valign="top"
+         ><span class="options">[<a href="#section-Properties"
+         class="privatelink" onclick="toggle_private();"
+         >hide private</a>]</span></td>
+      </tr>
+    </table>
+  </td>
+</tr>
+  <tr>
+    <td colspan="2" class="summary">
+    <p class="indent-wrapped-lines"><b>Inherited from <code>object</code></b>:
+      <code>__class__</code>
+      </p>
+    </td>
+  </tr>
+</table>
+<!-- ==================== METHOD DETAILS ==================== -->
+<a name="section-MethodDetails"></a>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr bgcolor="#70b0f0" class="table-header">
+  <td colspan="2" class="table-header">
+    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+      <tr valign="top">
+        <td align="left"><span class="table-header">Method Details</span></td>
+        <td align="right" valign="top"
+         ><span class="options">[<a href="#section-MethodDetails"
+         class="privatelink" onclick="toggle_private();"
+         >hide private</a>]</span></td>
+      </tr>
+    </table>
+  </td>
+</tr>
+</table>
+<a name="__init__"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">__init__</span>(<span class="sig-arg">self</span>,
+        <span class="sig-arg">path</span>)</span>
+    <br /><em class="fname">(Constructor)</em>
+  </h3>
+  </td><td align="right" valign="top"
+    >&nbsp;
+    </td>
+  </tr></table>
+  
+  <p>x.__init__(...) initializes x; see x.__class__.__doc__ for 
+  signature</p>
+  <dl class="fields">
+    <dt>Overrides:
+        object.__init__
+        <dd><em class="note">(inherited documentation)</em></dd>
+    </dt>
+  </dl>
+</td></tr></table>
+</div>
+<a name="_copy_file_to_repository"></a>
+<div class="private">
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">_copy_file_to_repository</span>(<span class="sig-arg">self</span>,
+        <span class="sig-arg">src</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    >&nbsp;
+    </td>
+  </tr></table>
+  
+  <p>Copy a file src into the MiniLIMS repository.</p>
+  <p>src can be a fairly arbitrary path, either from the CWD, or using .. 
+  and other such shortcuts.  This function should only be called from 
+  SQLite3, not Python.</p>
+  <dl class="fields">
+  </dl>
+</td></tr></table>
+</div>
+<a name="_delete_repository_file"></a>
+<div class="private">
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">_delete_repository_file</span>(<span class="sig-arg">self</span>,
+        <span class="sig-arg">filename</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    >&nbsp;
+    </td>
+  </tr></table>
+  
+  <p>Delete a file from the MiniLIMS repository.</p>
+  <p>This function should only be called from SQLite3, not from Python.</p>
+  <dl class="fields">
+  </dl>
+</td></tr></table>
+</div>
+<a name="_export_file_from_repository"></a>
+<div class="private">
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">_export_file_from_repository</span>(<span class="sig-arg">self</span>,
+        <span class="sig-arg">fileid</span>,
+        <span class="sig-arg">dst</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    >&nbsp;
+    </td>
+  </tr></table>
+  
+  <p>Write a file with id fileid to the directory dst.</p>
+  <p>This function should only be called from SQLite3, not Python.</p>
+  <dl class="fields">
+  </dl>
+</td></tr></table>
+</div>
+<a name="add_alias"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">add_alias</span>(<span class="sig-arg">self</span>,
+        <span class="sig-arg">fileid</span>,
+        <span class="sig-arg">alias</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    >&nbsp;
+    </td>
+  </tr></table>
+  
+  <p>Make the string *alias* an alias for *fileid* in the repository.</p>
+  <p>An alias can be used in place of an integer file ID in all methods 
+  that take a file ID.</p>
+  <dl class="fields">
+  </dl>
+</td></tr></table>
+</div>
+<a name="associate_file"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">associate_file</span>(<span class="sig-arg">self</span>,
+        <span class="sig-arg">file_or_alias</span>,
+        <span class="sig-arg">associate_to</span>,
+        <span class="sig-arg">template</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    >&nbsp;
+    </td>
+  </tr></table>
+  
+  <p>Add a file association from *file_or_alias* to *associate_to*.</p>
+  <p>When the file *associate_to* is used in an execution, *file_or_alias* 
+  is also used, and named according to *template*. *template* should be a 
+  string containing ``%s``, which will be replaced with the name 
+  *associate_to* is copied to.  So if *associate_to* is copied to *X* in 
+  the working directory, and the template is ``&quot;%s.idx&quot;``, then 
+  `file_or_alias` is copied to *X*``.idx``.</p>
+  <dl class="fields">
+  </dl>
+</td></tr></table>
+</div>
+<a name="associated_files_of"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">associated_files_of</span>(<span class="sig-arg">self</span>,
+        <span class="sig-arg">file_or_alias</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    >&nbsp;
+    </td>
+  </tr></table>
+  
+  <p>Find all files associated to *file_or_alias*.</p>
+  <p>Return a list of ``(fileid, template)`` of all files associated to 
+  *file_or_alias*.</p>
+  <dl class="fields">
+  </dl>
+</td></tr></table>
+</div>
+<a name="browse_executions"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">browse_executions</span>(<span class="sig-arg">self</span>,
+        <span class="sig-arg">with_text</span>=<span class="sig-default">None</span>,
+        <span class="sig-arg">with_description</span>=<span class="sig-default">None</span>,
+        <span class="sig-arg">started_before</span>=<span class="sig-default">None</span>,
+        <span class="sig-arg">started_after</span>=<span class="sig-default">None</span>,
+        <span class="sig-arg">ended_before</span>=<span class="sig-default">None</span>,
+        <span class="sig-arg">ended_after</span>=<span class="sig-default">None</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    >&nbsp;
+    </td>
+  </tr></table>
+  
+  <p>Prints and returns a set of tuples (ID, description, started at, 
+  finished at), one for each execution corresponding to the request. See 
+  the documentation for search_executions().</p>
+  <dl class="fields">
+  </dl>
+</td></tr></table>
+</div>
+<a name="copy_file"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">copy_file</span>(<span class="sig-arg">self</span>,
+        <span class="sig-arg">file_or_alias</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    >&nbsp;
+    </td>
+  </tr></table>
+  
+  <p>Copy the given file in the MiniLIMS repository.</p>
+  <p>A copy of the file corresponding to the given fileid is made in the 
+  MiniLIMS repository, and the file id of the copy is returned.  This is 
+  most useful to create a mutable copy of an immutable file.</p>
+  <dl class="fields">
+  </dl>
+</td></tr></table>
+</div>
+<a name="delete_alias"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">delete_alias</span>(<span class="sig-arg">self</span>,
+        <span class="sig-arg">alias</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    >&nbsp;
+    </td>
+  </tr></table>
+  
+  <p>Delete the alias *alias* from the repository.</p>
+  <p>The file itself is untouched.  This only affects the alias.</p>
+  <dl class="fields">
+  </dl>
+</td></tr></table>
+</div>
+<a name="delete_file_association"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">delete_file_association</span>(<span class="sig-arg">self</span>,
+        <span class="sig-arg">file_or_alias</span>,
+        <span class="sig-arg">associated_to</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    >&nbsp;
+    </td>
+  </tr></table>
+  
+  <p>Remove the file association from *file_or_alias* to 
+  *associated_to*.</p>
+  <p>Both fields can be either an integer or an alias string.</p>
+  <dl class="fields">
+  </dl>
+</td></tr></table>
+</div>
+<a name="export_file"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">export_file</span>(<span class="sig-arg">self</span>,
+        <span class="sig-arg">file_or_alias</span>,
+        <span class="sig-arg">dst</span>,
+        <span class="sig-arg">with_associated</span>=<span class="sig-default">False</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    >&nbsp;
+    </td>
+  </tr></table>
+  
+  <p>Write *file_or_alias* from the MiniLIMS repository to *dst*.</p>
+  <p>*dst* can be either a directory, in which case the file will have its 
+  repository name in the new directory, or can specify a filename, in which
+  case the file will be copied to that filename. Associated files will also
+  be copied if *with_associated=True*.</p>
+  <dl class="fields">
+  </dl>
+</td></tr></table>
+</div>
+<a name="import_file"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">import_file</span>(<span class="sig-arg">self</span>,
+        <span class="sig-arg">src</span>,
+        <span class="sig-arg">description</span>=<span class="sig-default"><code class="variable-quote">'</code><code class="variable-string"></code><code class="variable-quote">'</code></span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    >&nbsp;
+    </td>
+  </tr></table>
+  
+  <p>Add an external file *src* to the MiniLIMS repository.</p>
+  <p>*src* should be the path to the file to be added. *description* is an 
+  optional string or dictionary that will be attached to the file in the 
+  repository.  ``import_file`` returns the file id in the repository of the
+  newly imported file.</p>
+  <dl class="fields">
+  </dl>
+</td></tr></table>
+</div>
+<a name="path_to_file"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">path_to_file</span>(<span class="sig-arg">self</span>,
+        <span class="sig-arg">file_or_alias</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    >&nbsp;
+    </td>
+  </tr></table>
+  
+  <p>Return the full path to a file in the repository.</p>
+  <p>It is often useful to be able to read a file in the repository without
+  actually copying it.  If you are not planning to write to it, this 
+  presents no problem.</p>
+  <dl class="fields">
+  </dl>
+</td></tr></table>
+</div>
+<a name="resolve_alias"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">resolve_alias</span>(<span class="sig-arg">self</span>,
+        <span class="sig-arg">alias</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    >&nbsp;
+    </td>
+  </tr></table>
+  
+  <p>Resolve an alias to an integer file id.</p>
+  <p>If an integer is passed to ``resolve_alias``, it is returned as is, so
+  this method can be used without worry any time any alias might have to be
+  resolved.</p>
+  <dl class="fields">
+  </dl>
+</td></tr></table>
+</div>
+<a name="search_executions"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">search_executions</span>(<span class="sig-arg">self</span>,
+        <span class="sig-arg">with_text</span>=<span class="sig-default">None</span>,
+        <span class="sig-arg">with_description</span>=<span class="sig-default">None</span>,
+        <span class="sig-arg">started_before</span>=<span class="sig-default">None</span>,
+        <span class="sig-arg">started_after</span>=<span class="sig-default">None</span>,
+        <span class="sig-arg">ended_before</span>=<span class="sig-default">None</span>,
+        <span class="sig-arg">ended_after</span>=<span class="sig-default">None</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    >&nbsp;
+    </td>
+  </tr></table>
+  
+  <pre class="literalblock">
+Find executions matching the given criteria.
+
+Returns a list of execution ids of executions which satisfy
+all the criteria which are not None.  The criteria are:
+
+   * *with_text*: The execution's description or one of the
+     program arguments in the execution contains *with_text*.
+
+   * *with_description*: The execution's description contains 
+     *with_description*.
+
+   * *started_before*: The execution started running before
+     *start_before*.  This should be of the form &quot;YYYY-MM-DD
+     HH:MM:SS&quot;.  Final fields can be omitted, so &quot;YYYY&quot; and
+     &quot;YYYY-MM-DD HH:MM&quot; are also valid date formats.
+
+   * *started_after*: The execution started running after
+     *started_after*.  The format is identical to
+     *started_before*.
+
+   * *ended_before*: The execution finished running before
+     *ended_before*.  The format is the same as for
+     *started_before*.
+
+   * *ended_after*: The execution finished running after
+     *ended_after*.  The format is the same as for
+     *started_before*.
+
+</pre>
+  <dl class="fields">
+  </dl>
+</td></tr></table>
+</div>
+<a name="search_files"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">search_files</span>(<span class="sig-arg">self</span>,
+        <span class="sig-arg">with_text</span>=<span class="sig-default">None</span>,
+        <span class="sig-arg">with_description</span>=<span class="sig-default">None</span>,
+        <span class="sig-arg">older_than</span>=<span class="sig-default">None</span>,
+        <span class="sig-arg">newer_than</span>=<span class="sig-default">None</span>,
+        <span class="sig-arg">source</span>=<span class="sig-default">None</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    >&nbsp;
+    </td>
+  </tr></table>
+  
+  <pre class="literalblock">
+Find files matching given criteria in the LIMS.
+
+Finds files which satisfy all the criteria which are not None.
+The criteria are:
+
+   * *with_text*: The file's external_name or description
+     contains *with_text*
+
+   * *with_description*: The file's description contains 
+     *with_description*
+
+   * *older_than*: The file's created time is earlier than
+     *older_than*.  This should be of the form &quot;YYYY-MM-DD
+     HH:MM:SS&quot;.  Final fields can be omitted, so &quot;YYYY&quot; and
+     &quot;YYYY-MM-DD HH:MM&quot; are also valid date formats.
+
+   * *newer_than*: The file's created time is later than
+     *newer_then*, using the same format as *older_than*.
+
+   * *source*: Where the file came from.  Can be one of
+     ``'execution'``, ``'copy'``, ``'import'``,
+     ``('execution',exid)``, or ``('copy',srcid)``, where
+     ``exid`` is the numeric ID of the execution that created
+     this file, and ``srcid`` is the file ID of the file which
+     was copied to create this one.
+
+</pre>
+  <dl class="fields">
+  </dl>
+</td></tr></table>
+</div>
+<a name="write"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">write</span>(<span class="sig-arg">self</span>,
+        <span class="sig-arg">ex</span>,
+        <span class="sig-arg">description</span>=<span class="sig-default"><code class="variable-quote">'</code><code class="variable-string"></code><code class="variable-quote">'</code></span>,
+        <span class="sig-arg">exception_string</span>=<span class="sig-default">None</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    >&nbsp;
+    </td>
+  </tr></table>
+  
+  <p>Write an execution to the MiniLIMS.</p>
+  <p>The overall Execution object is recorded in the execution table.  Each
+  program in it is entered as a row in the program table, including their 
+  stdout, stderr, etc.  Each argument to the program gets a row in the 
+  argument table.  All files which were used in the execution from the 
+  MiniLIMS repository are added to the execution_use table.  Any files 
+  which were added to the repository are copied to the repository and 
+  entered in the file table.</p>
+  <dl class="fields">
+  </dl>
+</td></tr></table>
+</div>
+<br />
+<!-- ==================== NAVIGATION BAR ==================== -->
+<table class="navbar" border="0" width="100%" cellpadding="0"
+       bgcolor="#a0c0ff" cellspacing="0">
+  <tr valign="middle">
+  <!-- Home link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="bein-module.html">Home</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Tree link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="module-tree.html">Trees</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Index link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="identifier-index.html">Indices</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Help link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="help.html">Help</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Project homepage -->
+      <th class="navbar" align="right" width="100%">
+        <table border="0" cellpadding="0" cellspacing="0">
+          <tr><th class="navbar" align="center"
+            ><a class="navbar" target="_top" href="http://bbcf.epfl.ch/bein">bein</a></th>
+          </tr></table></th>
+  </tr>
+</table>
+<table border="0" cellpadding="0" cellspacing="0" width="100%%">
+  <tr>
+    <td align="left" class="footer">
+    Generated by Epydoc 3.0.1 on Wed Aug 31 20:08:10 2011
+    </td>
+    <td align="right" class="footer">
+      <a target="mainFrame" href="http://epydoc.sourceforge.net"
+        >http://epydoc.sourceforge.net</a>
+    </td>
+  </tr>
+</table>
+
+<script type="text/javascript">
+  <!--
+  // Private objects are initially displayed (because if
+  // javascript is turned off then we want them to be
+  // visible); but by default, we want to hide them.  So hide
+  // them unless we have a cookie that says to show them.
+  checkCookie();
+  // -->
+</script>
+</body>
+</html>
