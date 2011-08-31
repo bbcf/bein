@@ -3,7 +3,7 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-bein 0.95 documentation
+bein 1.1.0 documentation
 =======================
 
 .. toctree::
@@ -16,3 +16,4 @@ bein 0.95 documentation
 * :ref:`modindex`
 * :ref:`genindex`
 
+* `Developer documentation <http://bbcf.github.com/bein/>`_

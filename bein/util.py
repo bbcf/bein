@@ -1,5 +1,5 @@
 # bein/util.py
-# Copyright 2010, Frederick Ross
+# Copyright 2010, BBCF
 
 # This file is part of bein.
 
@@ -15,6 +15,7 @@
 
 # You should have received a copy of the GNU General Public License
 # along with bein.  If not, see <http://www.gnu.org/licenses/>.
+
 """
 :mod:`bein.util` -- Library of functions for bein
 =================================================
@@ -86,7 +87,7 @@ def first_n_lines(input_file, n, output_file = None):
                 l = inf.readline()
                 outf.write(l)
     return output_file
-            
+
 
 @program
 def touch(filename = None):
@@ -106,7 +107,7 @@ def remove_lines_matching(pattern, filename):
     return {'arguments': ['awk',"""!/%s/ { print $0 > "%s" }""" % (pattern,output_file),
                           filename],
             'return_value': output_file}
-    
+
 
 @program
 def md5sum(filename):
@@ -118,7 +119,7 @@ def md5sum(filename):
     return {"arguments": ["openssl","md5",filename],
             "return_value": parse_output}
 
-        
+
 
 @program
 def sleep(n):
@@ -163,7 +164,7 @@ def use_pickle(ex_or_lims, id_or_alias):
 
     *ex_or_lims* may be either an execution object or a MiniLIMS object.
     """
-    
+
     if isinstance(ex_or_lims, MiniLIMS):
         lims = ex_or_lims
     elif isinstance(ex_or_lims, Execution):
@@ -349,7 +350,7 @@ def sam_to_bam(sam_filename):
 @program
 def bam_to_sam(bam_filename, no_header=None):
     """Convert *bam_filename* to a SAM file.
-    
+
     Equivalent: ``samtools view [-h] bam_filename ...``
     """
     sam_filename = unique_filename_in()
@@ -416,7 +417,7 @@ def read_sets(reads,keep_unmapped=False):
     if last_read != None:
         # We have to check, since if samfile
         # has no alignments, accum is never defined.
-        yield accum    
+        yield accum
 
 @program
 def index_bam(bamfile):
@@ -453,11 +454,11 @@ try:
     import pysam
     def add_nh_flag(samfile, out=None):
         """Adds NH (Number of Hits) flag to each read alignment in *samfile*.
-        
+
         Scans a BAM file ordered by read name, counts the number of
         alternative alignments reported and writes them to a BAM file
         with the NH tag added.
-        
+
         If *out* is ``None``, a random name is used.
         """
         infile = pysam.Samfile(samfile, "r")
@@ -502,13 +503,13 @@ try:
     @contextmanager
     def add_figure(ex, figure_type='eps', description="", alias=None, figure_size=None):
         """Create a matplotlib figure and write it to the repository.
-    
+
         Use this as a with statement, for instance::
-    
+
             with add_figure(ex, 'eps') as fig:
                 hist(a)
                 xlabel('Random things I found')
-    
+
         This will plot a histogram of a with the x axis label set, and
         write the plot to the repository as an EPS file.
         """

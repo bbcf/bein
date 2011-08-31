@@ -90,7 +90,6 @@
       The text printed by the program to ``stderr``.  It has the same
       format as ``stdout``.
 
-
   .. autoexception:: ProgramFailed
 
   .. autofunction:: task
