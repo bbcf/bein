@@ -1,9 +1,22 @@
-build
+# Temporary files #
 .DS_Store
-*.swp
 *.pyc
+*.swp
+*.swo
 *~
-MANIFEST
-dist
-_build
-test/testing_lims*
+\#*
+.#*
+._*
+
+# IDE files #
+/.idea
+
+# Build files #
+/MANIFEST
+
+# Build directories #
+/build/
+/dist/
+
+# Git files #
+/.gitattributes
