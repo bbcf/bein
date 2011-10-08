@@ -3,15 +3,20 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-bein 1.1.0 documentation
-=======================
+Welcome to *bein's* documentation!
+==================================
+The file and workflow manager for bioinformatics.
 
+Table of Contents:
+''''''''''''''''''
 .. toctree::
-   :max-depth: 3
+   :maxdepth: 1
 
-* :doc:`tutorial`
-* :doc:`advanced_bein`
-* :doc:`faq`
-* :doc:`essay`
+   tutorial
+   bein
+   bein_util
+   advanced_bein
+   faq
+   essay
 
 Also see the `developer documentation <http://bbcf.github.com/bein/>`_.
