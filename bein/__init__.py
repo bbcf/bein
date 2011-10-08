@@ -1492,7 +1492,7 @@ class MiniLIMS(object):
         replaced with the name *associate_to* is copied to.  So if
         *associate_to* is copied to *X* in the working directory, and
         the template is ``"%s.idx"``, then `file_or_alias` is copied
-        to *X*``.idx``.
+        to *X* ``.idx``.
         """
         src = self.resolve_alias(file_or_alias)
         dst = self.resolve_alias(associate_to)

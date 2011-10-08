@@ -13,7 +13,5 @@ bein 1.1.0 documentation
 * :doc:`advanced_bein`
 * :doc:`faq`
 * :doc:`essay`
-* :ref:`modindex`
-* :ref:`genindex`
 
-* `Developer documentation <http://bbcf.github.com/bein/>`_
+Also see the `developer documentation <http://bbcf.github.com/bein/>`_.
