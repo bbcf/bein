@@ -4,7 +4,7 @@ setup(
         name            =   'bein',
         version         =   '1.1.0',
         description     =   'Miniature LIMS and workflow manager for bioinformatics',
-        long_description=   open('README.md').read(),
+        long_description=   open('README').read(),
         license         =   'GNU General Public License 3.0',
         url             =   'http://bbcf.epfl.ch/bein',
         author          =   'EPFL BBCF',
