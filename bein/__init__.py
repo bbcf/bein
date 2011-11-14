@@ -895,7 +895,7 @@ class MiniLIMS(object):
         to the repository are copied to the repository and entered in
         the file table.
         """
-        if isinstance(description,dict): description = str(description)
+        description = str(description)
         self.db.execute("""insert into execution
                            (started_at, finished_at, working_directory,
                             description, exception) 
@@ -983,8 +983,7 @@ class MiniLIMS(object):
         self.db.execute("""insert into file(external_name,repository_name,
                                             description,origin,origin_value) 
                            values (?,importfile(?),?,?,?)""",
-                        (filename,
-                         os.path.abspath(os.path.join(ex.working_directory,filename)),
+                        (filename, os.path.abspath(os.path.join(ex.working_directory,filename)),
                          description, 'execution', exid))
         return self.db.execute("""select last_insert_rowid()""").fetchone()[0]
 
