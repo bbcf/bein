@@ -54,7 +54,6 @@ program
     programs into bein for use in executions.
 """
 import subprocess
-import pickle
 import random
 import traceback
 import string
@@ -64,8 +63,6 @@ import sqlite3
 import time
 import shutil
 import threading
-import traceback
-import re
 from contextlib import contextmanager
 
 __version__ = '1.1.0'
