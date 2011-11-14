@@ -57,7 +57,7 @@ class TestProgramBinding(TestCase):
                 f.write("This is a test\nof the emergency broadcast\nsystem.\n")
             q = count_lines._lsf(ex, 'boris')
             self.assertEqual(str(q.__class__), "<class 'bein.Future'>")
-            self.assertEqual(q.wait(), 3)            
+            self.assertEqual(q.wait(), 3)
 
     def test_nonblocking_with_via_local(self):
         with execution(None) as ex:
@@ -74,7 +74,7 @@ class TestProgramBinding(TestCase):
                 f.write("This is a test\nof the emergency broadcast\nsystem.\n")
             q = count_lines.nonblocking(ex, 'boris', via='lsf')
             self.assertEqual(str(q.__class__), "<class 'bein.Future'>")
-            self.assertEqual(q.wait(), 3)          
+            self.assertEqual(q.wait(), 3)
 
     def test_syntaxerror_outside_execution(self):
         with execution(M) as ex:
@@ -155,13 +155,13 @@ class TestMiniLIMS(TestCase):
         f_found = M.search_files(with_text="LICENSE", with_description=f_desc, older_than=t2, source="import", newer_than=t1)
         self.assertIn(f_id, f_found)
         M.delete_file(f_id)
-        
+
         f_desc = {"name":"test_search_files_by_dict", "m":5, "n":15}
         f_id = M.import_file("../LICENSE", description=f_desc)
         f_found = M.search_files(with_description=f_desc)
         self.assertIn(f_id, f_found)
         M.delete_file(f_id)
-        
+
     def test_search_executions(self):
         with execution(M, description="desc_test") as ex:
             pass
@@ -174,7 +174,7 @@ class TestMiniLIMS(TestCase):
             pass
         ex_found = M.search_executions(with_description=ex_desc)
         self.assertIn(ex.id, ex_found)
-        
+
         try:
             with execution(M, description="desc_test_fail") as ex_nofail:
                 3/0
@@ -196,7 +196,7 @@ class TestMiniLIMS(TestCase):
         f_found = M.browse_files(with_description=f_desc)
         #self.assertIn(f_id,f_found)
         M.delete_file(f_id)
-        
+
     def test_browse_executions(self):
         ex_desc = "browse_ex_test"
         with execution(M, description=ex_desc) as ex:
@@ -213,17 +213,17 @@ class TestExportFile(TestCase):
         if not os.path.isdir(testdir):
             os.mkdir(testdir)
         M.associate_file(fileb,filea,template="%s.linked")
-        
+
         M.export_file(filea, dst=os.path.join(testdir,"exportedfile"), with_associated=True) #test with file name given
         self.assertTrue(os.path.isfile(os.path.join(testdir,"exportedfile"+".linked")))
-        
+
         os.remove(os.path.join(testdir,"exportedfile"))
         os.remove(os.path.join(testdir,"exportedfile"+".linked"))
-        
+
         M.export_file(filea, dst=testdir, with_associated=True) #test with directory given
         filename = M.fetch_file(filea)['repository_name']
         self.assertTrue(os.path.isfile(os.path.join(testdir, filename +".linked")))
-        
+
         os.remove(os.path.join(testdir, filename))
         os.remove(os.path.join(testdir, filename +".linked"))
 
@@ -262,7 +262,7 @@ class TestNoSuchProgramError(TestCase):
     def nonexistent():
         return {"arguments": ["meepbarf","hilda"],
                 "return_value": None}
-    
+
     def test_nonexistent(self):
         with execution(None) as ex:
             self.assertRaises(ValueError, self.nonexistent, ex)
@@ -282,7 +282,7 @@ class TestImmutabilityDropped(TestCase):
         exid1 = ex.id
         borisid = M.search_files(source=('execution',ex.id))[0]
         self.assertFalse(M.fetch_file(borisid)['immutable'])
-    
+
         with execution(M) as ex:
             ex.use(borisid)
 

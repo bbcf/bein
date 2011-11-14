@@ -1,6 +1,6 @@
 from __future__ import with_statement
 # bein/__init__.py
-# Copyright 2010 Frederick Ross
+# Copyright 2010 BBCF
 
 # This file is part of bein.
 
@@ -16,6 +16,7 @@ from __future__ import with_statement
 
 # You should have received a copy of the GNU General Public License
 # along with bein.  If not, see <http://www.gnu.org/licenses/>.
+
 """
 :mod:`bein` -- LIMS and workflow manager for bioinformatics
 ===========================================================
@@ -23,7 +24,7 @@ from __future__ import with_statement
 .. module:: bein
    :platform: Unix
    :synopsis: Workflow and provenance manager for bioinformatics
-.. moduleauthor:: Fred Ross <madhadron at gmail dot com>   
+.. moduleauthor:: BBCF <webmaster.bbcf@epfl.ch>
 
 Bein contains a miniature LIMS (Laboratory Information Management
 System) and a workflow manager.  It was written for the Bioinformatics
@@ -67,6 +68,7 @@ import traceback
 import re
 from contextlib import contextmanager
 
+__version__ = '1.1.0'
 
 # miscellaneous types
 
@@ -104,7 +106,7 @@ def unique_filename_in(path=None):
     if path == None:
         path = os.getcwd()
     def random_string():
-        return "".join([random.choice(string.letters + string.digits) 
+        return "".join([random.choice(string.letters + string.digits)
                         for x in range(20)])
     while True:
         filename = random_string()
@@ -234,14 +236,14 @@ class program(object):
             stdout_value = None
         else:
             stdout_value = sp.stdout.readlines()
-            
+
         if isinstance(stderr,file):
             stderr_value = None
         else:
             stderr_value = sp.stderr.readlines()
-                
+
         po = ProgramOutput(return_code, sp.pid,
-                           d["arguments"], 
+                           d["arguments"],
                            stdout_value, stderr_value)
         ex.report(po)
         if return_code == 0:
@@ -250,7 +252,7 @@ class program(object):
                 return z(po)
             else:
                 return z
-        else: 
+        else:
             raise ProgramFailed(po)
 
     def nonblocking(self, ex, *args, **kwargs):
@@ -269,7 +271,7 @@ class program(object):
             f = touch("boris")
 
         is exactly equivalent to
-        
+
         with execution(lims) as ex:
             a = touch.nonblocking("boris")
             f = a.wait()
@@ -337,7 +339,7 @@ class program(object):
         def g():
             try:
                 try:
-                    sp = subprocess.Popen(d["arguments"], bufsize=-1, 
+                    sp = subprocess.Popen(d["arguments"], bufsize=-1,
                                           stdout=stdout,
                                           stderr=stderr,
                                           cwd = ex.working_directory)
@@ -356,7 +358,7 @@ class program(object):
                     stderr_value = sp.stderr.readlines()
 
                 f.program_output = ProgramOutput(return_code, sp.pid,
-                                                 d["arguments"], 
+                                                 d["arguments"],
                                                  stdout_value,
                                                  stderr_value)
                 if return_code == 0:
@@ -421,7 +423,7 @@ class program(object):
         def g():
             try:
                 nullout = open(os.path.devnull, 'w')
-                sp = subprocess.Popen(cmds, bufsize=-1, stdout=nullout, 
+                sp = subprocess.Popen(cmds, bufsize=-1, stdout=nullout,
                                       stderr=nullout)
                 return_code = sp.wait()
                 while not(os.path.exists(os.path.join(ex.working_directory,
@@ -461,7 +463,7 @@ class program(object):
 
 class Execution(object):
     """``Execution`` objects hold the state of a current running execution.
-    
+
     You should generally use the execution function below to create an
     Execution, since it sets up the working directory properly.
 
@@ -499,7 +501,7 @@ class Execution(object):
         written into the MiniLIMS repository.
         """
         self.programs.append(program)
-    def add(self, filename, description="", associate_to_id=None, 
+    def add(self, filename, description="", associate_to_id=None,
             associate_to_filename=None, template=None, alias=None):
         """Add a file to the MiniLIMS object from this execution.
 
@@ -511,7 +513,7 @@ class Execution(object):
         Note that the file is not actually added to the repository
         until the execution finishes.
         """
-	if isinstance(description,dict): description=str(description)
+        if isinstance(description,dict): description=str(description)
         if filename == None:
             if description == "":
                 raise(IOError("Tried to add None to repository."))
@@ -530,15 +532,15 @@ class Execution(object):
         """Fetch a file from the MiniLIMS repository.
 
         fileid should be an integer assigned to a file in the MiniLIMS
-        repository, or a string giving a file alias in the MiniLIMS 
+        repository, or a string giving a file alias in the MiniLIMS
         repository.  The file is copied into the execution's working
         directory with a unique filename.  'use' returns the unique
         filename it copied the file into.
         """
         fileid = self.lims.resolve_alias(file_or_alias)
         try:
-            filename = [x for (x,) in 
-                        self.lims.db.execute("select exportfile(?,?)", 
+            filename = [x for (x,) in
+                        self.lims.db.execute("select exportfile(?,?)",
                                              (fileid, self.working_directory))][0]
             for (f,t) in self.lims.associated_files_of(fileid):
                 self.lims.db.execute("select exportfile(?,?)",
@@ -552,7 +554,7 @@ class Execution(object):
 @contextmanager
 def execution(lims = None, description="", remote_working_directory=None):
     """Create an ``Execution`` connected to the given MiniLIMS object.
-    
+
     ``execution`` is a ``contextmanager``, so it can be used in a ``with``
     statement, as in::
 
@@ -647,7 +649,7 @@ class MiniLIMS(object):
       * :meth:`delete_file`
       * :meth:`delete_execution`
 
-    Searching files and executions:      
+    Searching files and executions:
       * :meth:`search_files`
       * :meth:`search_executions`
       * :meth:`browse_files`
@@ -658,7 +660,7 @@ class MiniLIMS(object):
       * :meth:`add_alias`
       * :meth:`delete_alias`
 
-    File associations:      
+    File associations:
       * :meth:`associate_file`
       * :meth:`delete_file_association`
       * :meth:`associated_files_of`
@@ -677,11 +679,11 @@ class MiniLIMS(object):
         """Sets up a new MiniLIMS database.
         """
         self.db.execute("""
-        CREATE TABLE execution ( 
-             id integer primary key, 
-             started_at integer not null, 
+        CREATE TABLE execution (
+             id integer primary key,
+             started_at integer not null,
              finished_at integer default null,
-             working_directory text not null, 
+             working_directory text not null,
              description text not null default '',
              exception text default null
         )""")
@@ -705,13 +707,13 @@ class MiniLIMS(object):
                primary key (pos,program,execution)
         )""")
         self.db.execute("""
-        CREATE TABLE file ( 
-               id integer primary key autoincrement, 
-               external_name text, 
+        CREATE TABLE file (
+               id integer primary key autoincrement,
+               external_name text,
                repository_name text,
-               created timestamp default current_timestamp, 
+               created timestamp default current_timestamp,
                description text not null default '',
-               origin text not null default 'execution', 
+               origin text not null default 'execution',
                origin_value integer default null
         )""")
         self.db.execute("""
@@ -737,9 +739,9 @@ class MiniLIMS(object):
              SELECT RAISE(FAIL, 'Cannot change the repository name of a file.');
         END""")
         self.db.execute("""
-        CREATE VIEW file_direct_immutability AS 
-        SELECT file.id as id, count(execution) > 0 as immutable 
-        from file left join execution_use 
+        CREATE VIEW file_direct_immutability AS
+        SELECT file.id as id, count(execution) > 0 as immutable
+        from file left join execution_use
         on file.id = execution_use.file
         group by file.id
         """)
@@ -762,8 +764,8 @@ class MiniLIMS(object):
         """)
         self.db.execute("""
         CREATE VIEW execution_outputs AS
-        select execution.id as execution, file.id as file 
-        from execution left join file 
+        select execution.id as execution, file.id as file
+        from execution left join file
         on execution.id = file.origin_value
         and file.origin='execution'
         """)
@@ -775,80 +777,80 @@ class MiniLIMS(object):
         group by id
         """)
         self.db.execute("""
-        CREATE TRIGGER prevent_file_delete BEFORE DELETE ON file 
-        FOR EACH ROW WHEN 
+        CREATE TRIGGER prevent_file_delete BEFORE DELETE ON file
+        FOR EACH ROW WHEN
             (SELECT immutable FROM file_immutability WHERE id = OLD.id) = 1
         BEGIN
-            SELECT RAISE(FAIL, 'File is immutable; cannot delete it.'); 
+            SELECT RAISE(FAIL, 'File is immutable; cannot delete it.');
         END
         """)
         self.db.execute("""
         CREATE TRIGGER prevent_argument_delete BEFORE DELETE ON argument
-        FOR EACH ROW WHEN 
-            (SELECT immutable FROM execution_immutability WHERE id = OLD.execution) = 1 
-        BEGIN 
-            SELECT RAISE(FAIL, 'Execution is immutable; cannot delete argument.'); 
-        END	   
+        FOR EACH ROW WHEN
+            (SELECT immutable FROM execution_immutability WHERE id = OLD.execution) = 1
+        BEGIN
+            SELECT RAISE(FAIL, 'Execution is immutable; cannot delete argument.');
+        END
         """)
         self.db.execute("""
         CREATE TRIGGER prevent_argument_update BEFORE UPDATE ON argument
         FOR EACH ROW WHEN
-            (SELECT immutable FROM execution_immutability WHERE id = OLD.execution) = 1 
+            (SELECT immutable FROM execution_immutability WHERE id = OLD.execution) = 1
         BEGIN
-            SELECT RAISE(FAIL, 'Execution is immutable; cannot update command arguments.'); 
+            SELECT RAISE(FAIL, 'Execution is immutable; cannot update command arguments.');
         END
         """)
         self.db.execute("""
         CREATE TRIGGER prevent_command_delete BEFORE DELETE ON program
-        FOR EACH ROW WHEN 
-            (SELECT immutable FROM execution_immutability WHERE id = OLD.execution) = 1 
+        FOR EACH ROW WHEN
+            (SELECT immutable FROM execution_immutability WHERE id = OLD.execution) = 1
         BEGIN
-            SELECT RAISE(FAIL, 'Execution is immutable; cannot delete command.'); 
+            SELECT RAISE(FAIL, 'Execution is immutable; cannot delete command.');
         END
         """)
         self.db.execute("""
         CREATE TRIGGER prevent_command_update BEFORE UPDATE ON program
-        FOR EACH ROW WHEN 
+        FOR EACH ROW WHEN
             (SELECT immutable FROM execution_immutability WHERE id = OLD.execution) = 1
         BEGIN
-            SELECT RAISE(FAIL, 'Execution is immutable; cannot update commands.'); 
+            SELECT RAISE(FAIL, 'Execution is immutable; cannot update commands.');
         END
         """)
         self.db.execute("""
-        CREATE TRIGGER prevent_execution_delete BEFORE DELETE ON execution 
+        CREATE TRIGGER prevent_execution_delete BEFORE DELETE ON execution
         FOR EACH ROW WHEN
             (SELECT immutable FROM execution_immutability WHERE id = OLD.id) = 1
         BEGIN
-            SELECT RAISE(FAIL, 'Execution is immutable; cannot delete.'); 
+            SELECT RAISE(FAIL, 'Execution is immutable; cannot delete.');
         END
         """)
         self.db.execute("""
         CREATE TRIGGER prevent_execution_update BEFORE UPDATE ON execution
         FOR EACH ROW WHEN
-            (SELECT immutable FROM execution_immutability WHERE id = OLD.id) = 1 AND 
+            (SELECT immutable FROM execution_immutability WHERE id = OLD.id) = 1 AND
             (OLD.id != NEW.id OR OLD.started_at != NEW.started_at OR OLD.finished_at != NEW.finished_at
-             OR OLD.temp_dir != NEW.temp_dir) 
+             OR OLD.temp_dir != NEW.temp_dir)
         BEGIN
-            SELECT RAISE(FAIL, 'Execution is immutable; cannot update anything but description.'); 
+            SELECT RAISE(FAIL, 'Execution is immutable; cannot update anything but description.');
         END
         """)
         self.db.execute("""
-        CREATE TRIGGER prevent_immutable_file_update BEFORE UPDATE on file 
-        FOR EACH ROW WHEN 
-            (SELECT immutable FROM file_immutability WHERE id = old.id) = 1 AND 
-            (OLD.id != NEW.id OR OLD.external_name != NEW.external_name OR 
-             OLD.repository_name != NEW.repository_name OR 
-             OLD.created != NEW.created OR OLD.origin != NEW.origin OR 
-             OLD.origin_value != NEW.origin_value) 
-        BEGIN 
-            SELECT RAISE(FAIL, 'File is immutable; cannot update except description.'); 
+        CREATE TRIGGER prevent_immutable_file_update BEFORE UPDATE on file
+        FOR EACH ROW WHEN
+            (SELECT immutable FROM file_immutability WHERE id = old.id) = 1 AND
+            (OLD.id != NEW.id OR OLD.external_name != NEW.external_name OR
+             OLD.repository_name != NEW.repository_name OR
+             OLD.created != NEW.created OR OLD.origin != NEW.origin OR
+             OLD.origin_value != NEW.origin_value)
+        BEGIN
+            SELECT RAISE(FAIL, 'File is immutable; cannot update except description.');
         END
         """)
         self.db.commit()
 
     def _copy_file_to_repository(self,src):
         """Copy a file src into the MiniLIMS repository.
-        
+
         src can be a fairly arbitrary path, either from the CWD, or
         using .. and other such shortcuts.  This function should only
         be called from SQLite3, not Python.
@@ -875,7 +877,7 @@ class MiniLIMS(object):
         else:
             filename = ""
         try:
-            [repository_filename] = [x for (x,) in self.db.execute("select repository_name from file where id=?", 
+            [repository_filename] = [x for (x,) in self.db.execute("select repository_name from file where id=?",
                                                                    (fileid,))]
             shutil.copyfile(os.path.abspath(os.path.join(self.file_path,repository_filename)),
                             os.path.abspath(os.path.join(dst, filename)))
@@ -898,9 +900,9 @@ class MiniLIMS(object):
         description = str(description)
         self.db.execute("""insert into execution
                            (started_at, finished_at, working_directory,
-                            description, exception) 
+                            description, exception)
                            values (?,?,?,?,?)""",
-                        (ex.started_at, ex.finished_at, ex.working_directory, 
+                        (ex.started_at, ex.finished_at, ex.working_directory,
                          description, exception_string))
         exid = self.db.execute("select last_insert_rowid()").fetchone()[0]
 
@@ -974,14 +976,14 @@ class MiniLIMS(object):
 
 
         for used_file in set(ex.used_files):
-            self.db.execute("""insert into execution_use(execution,file) 
+            self.db.execute("""insert into execution_use(execution,file)
                                values (?,?)""", (exid,used_file))
         self.db.commit()
         return exid
 
     def _insert_file(self, ex, exid, filename, description):
         self.db.execute("""insert into file(external_name,repository_name,
-                                            description,origin,origin_value) 
+                                            description,origin,origin_value)
                            values (?,importfile(?),?,?,?)""",
                         (filename, os.path.abspath(os.path.join(ex.working_directory,filename)),
                          description, 'execution', exid))
@@ -1003,7 +1005,7 @@ class MiniLIMS(object):
 
     def _associate_file(self, thisid, targetid, template):
         # Make the filename in the repository match this association
-        raw_name = self.db.execute("""select repository_name from file where id=?""", 
+        raw_name = self.db.execute("""select repository_name from file where id=?""",
                                    (targetid,)).fetchone()[0]
         new_target_name = template % raw_name
         self._rename_in_repository(thisid, new_target_name)
@@ -1018,7 +1020,7 @@ class MiniLIMS(object):
            * *with_text*: The file's external_name or description
              contains *with_text*
 
-           * *with_description*: The file's description contains 
+           * *with_description*: The file's description contains
              *with_description*
 
            * *older_than*: The file's created time is earlier than
@@ -1082,7 +1084,7 @@ class MiniLIMS(object):
            * *with_text*: The execution's description or one of the
              program arguments in the execution contains *with_text*.
 
-           * *with_description*: The execution's description contains 
+           * *with_description*: The execution's description contains
              *with_description*.
 
            * *started_before*: The execution started running before
@@ -1102,7 +1104,7 @@ class MiniLIMS(object):
              *ended_after*.  The format is the same as for
              *started_before*.
 
-	   * *fails*: If 'False', returns only executions that didn't
+           * *fails*: If 'False', returns only executions that didn't
              encounter any error, i.e. execution.exception not null.
              If 'True', returns only executions with errors.
              Warning: any try/except block inside an execution may
@@ -1132,14 +1134,14 @@ class MiniLIMS(object):
             desc_request += " and (exception is not null) "
         with_text = with_text != None and '%'+with_text+'%' or None
         sql = """select id from execution where""" + desc_request + """
-                 and (started_at <= ? or ? is null) 
+                 and (started_at <= ? or ? is null)
                  and (started_at >= ? or ? is null)
-                 and (finished_at <= ? or ? is null) 
+                 and (finished_at <= ? or ? is null)
                  and (finished_at >= ? or ? is null)
                  and (description like ? or ? is null)
                  and ((working_directory like ? or ? is null) or (description like ? or ? is null))
               """
-        matching_executions = [x for (x,) in self.db.execute(sql, 
+        matching_executions = [x for (x,) in self.db.execute(sql,
               (started_before, started_before,
                started_after, started_after,
                ended_before, ended_before,
@@ -1155,16 +1157,16 @@ class MiniLIMS(object):
         return sorted(list(set(matching_executions+matching_programs)))[::-1]
 
     def browse_files(self, with_text=None, with_description=None, older_than=None, newer_than=None, source=None):
-	"""
-	Prints and returns a set of tuples (ID, description, created at),
-	one for each file corresponding to the request.
-	See documentation for search_files().
-	"""
+        """
+        Prints and returns a set of tuples (ID, description, created at),
+        one for each file corresponding to the request.
+        See documentation for search_files().
+        """
         if not(isinstance(source, tuple)):
             source = (source,None)
         source = source != None and source or (None,None)
-	with_text = with_text != None and '%'+with_text+'%' or None
-        sql = """select id,description,created from file where 
+        with_text = with_text != None and '%'+with_text+'%' or None
+        sql = """select id,description,created from file where
                      ((external_name like ? or ? is null) or (description like ? or ? is null))
                  and (description like ? or ? is null)
                  and (created >= ? or ? is null)
@@ -1179,29 +1181,29 @@ class MiniLIMS(object):
                older_than, older_than,
                source[0], source[0],
                source[1], source[1]))
-	out = "ID \t Description \t Created at \n"
-	for m in matching_files:
-	    out += str(m[0])+"\t"+ m[1]+"\t"+m[2]+"\n"
-	print out
+        out = "ID \t Description \t Created at \n"
+        for m in matching_files:
+            out += str(m[0])+"\t"+ m[1]+"\t"+m[2]+"\n"
+        print out
         return matching_files
 
     def browse_executions(self, with_text=None, with_description=None, started_before=None,
-			  started_after=None, ended_before=None, ended_after=None):
-	"""
-	Prints and returns a set of tuples (ID, description, started at, finished at),
-	one for each execution corresponding to the request.
-	See documentation for search_executions().
-	"""
-	with_text = with_text != None and '%'+with_text+'%' or None
-        sql = """select id,description,started_at,finished_at from execution where 
-                 (started_at <= ? or ? is null) and 
+                          started_after=None, ended_before=None, ended_after=None):
+        """
+        Prints and returns a set of tuples (ID, description, started at, finished at),
+        one for each execution corresponding to the request.
+        See documentation for search_executions().
+        """
+        with_text = with_text != None and '%'+with_text+'%' or None
+        sql = """select id,description,started_at,finished_at from execution where
+                 (started_at <= ? or ? is null) and
                  (started_at >= ? or ? is null) and
-                 (finished_at <= ? or ? is null) and 
+                 (finished_at <= ? or ? is null) and
                  (finished_at >= ? or ? is null) and
                  (description like ? or ? is null) and
                  ((working_directory like ? or ? is null) or (description like ? or ? is null))
               """
-        matching_executions = [x for x in self.db.execute(sql, 
+        matching_executions = [x for x in self.db.execute(sql,
               (started_before, started_before,
                started_after, started_after,
                ended_before, ended_before,
@@ -1213,11 +1215,11 @@ class MiniLIMS(object):
             matching_programs = [x for (x,) in self.db.execute(sql, (with_text,))]
         else:
             matching_programs = []
-	matching_executions = matching_executions + matching_programs
-	out = "ID \t Description \t Started at \t Finished at \n"
-	for m in matching_executions:
-	    out += str(m[0])+"\t"+ m[1]+"\t"+ time.ctime(m[2])+"\t"+ time.ctime(m[3])+"\n"
-	print out
+        matching_executions = matching_executions + matching_programs
+        out = "ID \t Description \t Started at \t Finished at \n"
+        for m in matching_executions:
+            out += str(m[0])+"\t"+ m[1]+"\t"+ time.ctime(m[2])+"\t"+ time.ctime(m[3])+"\n"
+        print out
         return matching_executions
 
     def last_id(self):
@@ -1229,7 +1231,7 @@ class MiniLIMS(object):
         fileid = self.resolve_alias(id_or_alias)
         fields = self.db.execute("""select external_name, repository_name,
                                     created, description, origin, origin_value
-                                    from file where id=?""", 
+                                    from file where id=?""",
                                  (fileid,)).fetchone()
         if fields == None:
             raise ValueError("No such file " + str(id_or_alias) + " in MiniLIMS.")
@@ -1242,7 +1244,7 @@ class MiniLIMS(object):
             origin = ('execution',origin_value)
         elif origin_type == 'import':
             origin = 'import'
-        aliases = [a for (a,) in 
+        aliases = [a for (a,) in
                    self.db.execute("select alias from file_alias where file=?",
                                    (fileid,))]
         associations = self.db.execute("""select fileid,template from file_association where
@@ -1260,8 +1262,8 @@ class MiniLIMS(object):
                 'associations': associations,
                 'associated_to': associated_to,
                 'immutable': immutable == 1}
- 
-    
+
+
     def fetch_execution(self, exid):
         """Returns a dictionary of all the data corresponding to the given execution id."""
         def fetch_program(exid, progid):
@@ -1298,7 +1300,7 @@ class MiniLIMS(object):
                                                        where execution=?""", (exid,))]
         immutability = self.db.execute("""select immutable from execution_immutability
             where id=?""", (exid,)).fetchone()[0]
-            
+
         return {'started_at': started_at,
                 'finished_at': finished_at,
                 'working_directory': working_directory,
@@ -1319,18 +1321,18 @@ class MiniLIMS(object):
         """
         fileid = self.resolve_alias(file_or_alias)
         try:
-            sql = """select external_name,repository_name,description 
+            sql = """select external_name,repository_name,description
                      from file where id = ?"""
-            [(external_name, 
-              repository_name, 
+            [(external_name,
+              repository_name,
               description)] = [x for x in self.db.execute(sql, (fileid, ))]
             new_repository_name = unique_filename_in(self.file_path)
             sql = """insert into file(external_name,repository_name,
                                       origin,origin_value) values (?,?,?,?)"""
-            [x for x in self.db.execute(sql, (external_name, 
-                                              new_repository_name, 
+            [x for x in self.db.execute(sql, (external_name,
+                                              new_repository_name,
                                               'copy', fileid))]
-            [new_id] = [x for (x,) in 
+            [new_id] = [x for (x,) in
                         self.db.execute("select last_insert_rowid()")]
             shutil.copyfile(os.path.join(self.file_path, repository_name),
                             os.path.join(self.file_path, new_repository_name))
@@ -1338,7 +1340,7 @@ class MiniLIMS(object):
             return new_id
         except ValueError, v:
             raise ValueError("No such file id " + str(fileid))
-    
+
     def delete_file(self, file_or_alias):
         """Delete a file from the repository."""
         fileid = self.resolve_alias(file_or_alias)
@@ -1370,9 +1372,9 @@ class MiniLIMS(object):
                     pass
             self.db.execute("delete from argument where execution = ?",
                             (execution_id,))
-            self.db.execute("delete from program where execution = ?", 
+            self.db.execute("delete from program where execution = ?",
                             (execution_id,))
-            self.db.execute("delete from execution where id = ?", 
+            self.db.execute("delete from execution where id = ?",
                             (execution_id,))
             self.db.execute("delete from execution_use where execution=?",
                             (execution_id,))
@@ -1388,7 +1390,7 @@ class MiniLIMS(object):
         the file in the repository.  ``import_file`` returns the file id
         in the repository of the newly imported file.
         """
-        if isinstance(description,dict): 
+        if isinstance(description,dict):
             description = str(description)
         self.db.execute("""insert into file(external_name,repository_name,
                                             description,origin,origin_value)
@@ -1396,9 +1398,9 @@ class MiniLIMS(object):
                         (os.path.basename(src),os.path.abspath(src),
                          description,'import',None))
         self.db.commit()
-        return [x for (x,) in 
+        return [x for (x,) in
                 self.db.execute("""select last_insert_rowid()""")][0]
-        
+
     def export_file(self, file_or_alias, dst, with_associated=False):
         """Write *file_or_alias* from the MiniLIMS repository to *dst*.
 
@@ -1409,7 +1411,7 @@ class MiniLIMS(object):
         Associated files will also be copied if *with_associated=True*.
         """
         src = self.path_to_file(file_or_alias)
-        shutil.copy(src, dst) 
+        shutil.copy(src, dst)
         if with_associated:
             if os.path.isdir(dst):
                 dst = os.path.join(dst, self.fetch_file(file_or_alias)['repository_name'])
@@ -1427,7 +1429,7 @@ class MiniLIMS(object):
         to it, this presents no problem.
         """
         fileid = self.resolve_alias(file_or_alias)
-        filename = [x for (x,) in 
+        filename = [x for (x,) in
                     self.db.execute("""select repository_name
                                        from file where id = ?""",
                                     (fileid, ))][0]
@@ -1438,7 +1440,7 @@ class MiniLIMS(object):
 
         If an integer is passed to ``resolve_alias``, it is returned as is,
         so this method can be used without worry any time any alias
-        might have to be resolved.        
+        might have to be resolved.
         """
         if isinstance(alias, int):
             x = self.db.execute("select id from file where id=?", (alias,)).fetchall()
@@ -1456,7 +1458,7 @@ class MiniLIMS(object):
     def add_alias(self, fileid, alias):
         """Make the string *alias* an alias for *fileid* in the repository.
 
-        An alias can be used in place of an integer file ID in 
+        An alias can be used in place of an integer file ID in
         all methods that take a file ID.
         """
         self.db.execute("""insert into file_alias(alias,file) values (?,?)""",
@@ -1474,7 +1476,7 @@ class MiniLIMS(object):
     def associated_files_of(self, file_or_alias):
         """Find all files associated to *file_or_alias*.
 
-        Return a list of ``(fileid, template)`` of all files associated 
+        Return a list of ``(fileid, template)`` of all files associated
         to *file_or_alias*.
         """
         f = self.resolve_alias(file_or_alias)
@@ -1483,13 +1485,13 @@ class MiniLIMS(object):
     def associate_file(self, file_or_alias, associate_to, template):
         """Add a file association from *file_or_alias* to *associate_to*.
 
-        When the file *associate_to* is used in an execution, 
-        *file_or_alias* is also used, and named according to *template*. 
+        When the file *associate_to* is used in an execution,
+        *file_or_alias* is also used, and named according to *template*.
         *template* should be a string containing ``%s``, which will be
         replaced with the name *associate_to* is copied to.  So if
         *associate_to* is copied to *X* in the working directory, and
-        the template is ``"%s.idx"``, then `file_or_alias` is copied 
-        to *X*``.idx``.
+        the template is ``"%s.idx"``, then `file_or_alias` is copied
+        to *X* ``.idx``.
         """
         src = self.resolve_alias(file_or_alias)
         dst = self.resolve_alias(associate_to)
@@ -1498,7 +1500,7 @@ class MiniLIMS(object):
         else:
             self.db.execute("""insert into file_association(fileid,associated_to,template) values (?,?,?)""", (src, dst, template))
             self.db.commit()
-            
+
     def delete_file_association(self, file_or_alias, associated_to):
         """Remove the file association from *file_or_alias* to *associated_to*.
 
@@ -1540,7 +1542,7 @@ def task(f):
     file to the MiniLIMS.
 
     The return value is a dictionary with three keys:
-    
+
         * ``value`` is the value returned by the function which @task
           wrapped.
 

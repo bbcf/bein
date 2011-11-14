@@ -44,7 +44,7 @@ How do you get the file ID to add the alias?  You can't.  File IDs aren't assign
 
     with execution(M) as ex:
         ...do something...
-        ex.add("myfile", alias="an alias", 
+        ex.add("myfile", alias="an alias",
                description="This is something important")
 
 Now when the file is added to the MiniLIMS at the end of the execution, the alias ``"an alias"`` will be assigned to it.
@@ -111,7 +111,7 @@ This special naming only happens when the association is specified in ``ex.add``
 
     with execution(M) as ex:
         ...code that creates a, b, and c
-	ex.add("a")
+    ex.add("a")
         ex.add("b", associate_to_filename="a", template="%s.step")
         ex.add("c", associate_to_filename="b", template="%s.step")
 
@@ -126,7 +126,7 @@ The ``@program`` decorator provides some magic to make this parallelization easy
 
     with execution(M) as ex:
         ...
-        samfiles = [bowtie(ex, index, f) for f 
+        samfiles = [bowtie(ex, index, f) for f
                     in ["reads1","reads2","reads3"]]
         ...
 
@@ -150,7 +150,7 @@ The example shows a common idiom for writing parallel executions in bein: use li
         futures = [bowtie.nonblocking(ex, index, f) for f
                    in ["reads1","reads2","reads3"]]
         samfiles = [f.wait() for f in futures]
-        futures = [sam_to_bam.nonblocking(ex, samfile) 
+        futures = [sam_to_bam.nonblocking(ex, samfile)
                    for samfile in samfiles]
         bamfiles = [f.wait() for f in futures]
         ...
@@ -177,7 +177,7 @@ When binding a program that must have its ``stdout`` redirected, it is best to w
     def _cat(input_file):
         return {'arguments': ['cat',input_file],
                 'return_value': None}
-    
+
     def cat(ex, input_file, filename=None):
         if filename == None:
             filename = unique_filename_in()
@@ -197,7 +197,7 @@ Unfortunately, you have to add your own ``nonblocking`` binding by hand, as in::
                 self.future.wait()
                 return filename
         return Future(f)
-    
+
     cat.nonblocking = _cat_nonblocking
 
 You may also want to use these keyword arguments if you expect enormous amounts of data on ``stdout`` or ``stderr``, more than can be reasonably bassed back in a ``ProgramOutput`` object.
@@ -213,10 +213,10 @@ For example, say we have an execution which takes a long time to run::
 
     with execution(M) as ex:
         # First logical stage of the execution
-	...
+    ...
 
-	# Second logical stage of the execution
-	...
+    # Second logical stage of the execution
+    ...
 
 We divide it into two functions, ``first_part`` and ``second_part``::
 
@@ -224,13 +224,13 @@ We divide it into two functions, ``first_part`` and ``second_part``::
     def first_part(ex, ...)
         # First logical stage of the execution
         ...
-	return ...
+    return ...
 
     @task
     def second_part(ex, ...)
         ex.use(...) # Use any results from first_part that we need
-	# Second logical stage of the execution
-	...
+    # Second logical stage of the execution
+    ...
 
 Then we would call them in sequence::
 
@@ -321,12 +321,12 @@ The tutorial's section on :ref:`program-binding` covers all the mechanics of wri
             return {'arguments': ['bowtie'] + options + [index, reads,sam_filename],
                     'return_value': sam_filename}
 
-**Use** :func:`~bein.unique_filename_in` **to name output files.** 
+**Use** :func:`~bein.unique_filename_in` **to name output files.**
     If a program will create an output file, use
     :func:`~bein.unique_filename_in` to get a name for it.  Don't hard
     code names.
 
-**Let the program fail if at all possible.** 
+**Let the program fail if at all possible.**
     Check the arguments passed to your function only enough to
     actually produce a sensible argument list.  Otherwise let the
     external program fail and bein clean up the mess.  You gain no
@@ -350,10 +350,10 @@ Combining bindings into larger actions
 
 A workflow usually divides into sets of actions, each of which form a logical component of the whole.  Such components tend to be reusable with a little generalization, so it's worth breaking them out into separate functions.  For example, here is simplified code for :func:`~bein.util.parallel_bowtie`, which splits a file into pieces, runs bowtie in parallel on each piece, and reassembles the results::
 
-    def parallel_bowtie(ex, index, reads, n_lines = 1000000, 
+    def parallel_bowtie(ex, index, reads, n_lines = 1000000,
                         bowtie_args="-Sra"):
         subfiles = split_file(ex, reads, n_lines = n_lines)
-        futures = [bowtie.nonblocking(ex, index, sf, args = bowtie_args) 
+        futures = [bowtie.nonblocking(ex, index, sf, args = bowtie_args)
                    for sf in subfiles]
         samfiles = [f.wait() for f in futures]
         futures = [sam_to_bam.nonblocking(ex, sf) for sf in samfiles]

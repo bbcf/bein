@@ -1,12 +1,15 @@
 from distutils.core import setup
-setup(name='bein',
-      version='1.06',
-      url='http://madhadron.com/bein',
-      description='Miniature LIMS and workflow manager for bioinformatics',
-      author='Fred Ross',
-      author_email='madhadron@gmail.com',
-      packages=['bein'],
-      scripts=['add_nh_flag'],
-      classifiers=['Topic :: System :: Shells', 'Topic :: Scientific/Engineering :: Bio-Informatics'],
-      install_requires = ['unittest2'],
-      )
+
+setup(
+        name            =   'bein',
+        version         =   '1.1.0',
+        description     =   'Miniature LIMS and workflow manager for bioinformatics',
+        long_description=   open('README').read(),
+        license         =   'GNU General Public License 3.0',
+        url             =   'http://bbcf.epfl.ch/bein',
+        author          =   'EPFL BBCF',
+        author_email    =   'webmaster.bbcf@epfl.ch',
+        classifiers     =   ['Topic :: Scientific/Engineering :: Bio-Informatics',
+                             'Topic :: System :: Shells',],
+        packages        =   ['bein'],
+    )
