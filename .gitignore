@@ -8,6 +8,10 @@
 .#*
 ._*
 
+# Test files #
+/testing_lims
+/testing_lims.files
+
 # IDE files #
 /.idea
 
