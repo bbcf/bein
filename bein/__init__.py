@@ -84,14 +84,15 @@ class ProgramOutput(object):
         self.stdout = stdout
         self.stderr = stderr
 
-
 class ProgramFailed(Exception):
     """Thrown when a program bound by ``@program`` exits with a value other than 0."""
     def __init__(self, output):
         self.output = output
     def __str__(self):
-        return("Running '" + " ".join(self.output.arguments) + \
-                   "' failed with stderr:\n\t" + "\t".join(self.output.stderr))
+        message = "Running '%s' failed with " % " ".join(self.output.arguments)
+        if self.output.stdout: message += "stdout:\n\t%s" % "\n".join(self.output.stdout)
+        if self.output.stderr: message += "stderr:\n\t%s" % "\n".join(self.output.stderr)
+        return message
 
 def unique_filename_in(path=None):
     """Return a random filename unique in the given path.
