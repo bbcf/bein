@@ -90,8 +90,8 @@ class ProgramFailed(Exception):
         self.output = output
     def __str__(self):
         message = "Running '%s' failed with " % " ".join(self.output.arguments)
-        if self.output.stdout: message += "stdout:\n\t%s" % "".join(self.output.stdout)
-        if self.output.stderr: message += "stderr:\n\t%s" % "".join(self.output.stderr)
+        if self.output.stdout: message += "stdout:\n%s" % "".join(self.output.stdout)
+        if self.output.stderr: message += "stderr:\n%s" % "".join(self.output.stderr)
         return message
 
 def unique_filename_in(path=None):
