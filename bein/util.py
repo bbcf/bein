@@ -71,6 +71,7 @@ from bein import *
 
 def pause():
     """Pause until the user hits Return."""
+    print >> sys.stdout, "Paused. Hit a key to continue."
     sys.stdin.readline()
     return None
 
@@ -87,7 +88,7 @@ def first_n_lines(input_file, n, output_file = None):
                 l = inf.readline()
                 outf.write(l)
     return output_file
-            
+
 
 @program
 def touch(filename = None):
@@ -107,7 +108,7 @@ def remove_lines_matching(pattern, filename):
     return {'arguments': ['awk',"""!/%s/ { print $0 > "%s" }""" % (pattern,output_file),
                           filename],
             'return_value': output_file}
-    
+
 
 @program
 def md5sum(filename):
@@ -119,7 +120,7 @@ def md5sum(filename):
     return {"arguments": ["openssl","md5",filename],
             "return_value": parse_output}
 
-        
+
 
 @program
 def sleep(n):
@@ -164,7 +165,7 @@ def use_pickle(ex_or_lims, id_or_alias):
 
     *ex_or_lims* may be either an execution object or a MiniLIMS object.
     """
-    
+
     if isinstance(ex_or_lims, MiniLIMS):
         lims = ex_or_lims
     elif isinstance(ex_or_lims, Execution):
@@ -267,13 +268,13 @@ try:
     @contextmanager
     def add_figure(ex, figure_type='eps', description="", alias=None, figure_size=None):
         """Create a matplotlib figure and write it to the repository.
-    
+
         Use this as a with statement, for instance::
-    
+
             with add_figure(ex, 'eps') as fig:
                 hist(a)
                 xlabel('Random things I found')
-    
+
         This will plot a histogram of a with the x axis label set, and
         write the plot to the repository as an EPS file.
         """
