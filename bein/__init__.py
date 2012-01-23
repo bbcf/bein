@@ -1,22 +1,3 @@
-from __future__ import with_statement
-# bein/__init__.py
-# Copyright 2010 BBCF
-
-# This file is part of bein.
-
-# Bein is free software: you can redistribute it and/or modify it under
-# the terms of the GNU General Public License as published by the Free
-# Software Foundation, either version 3 of the License, or (at your
-# option) any later version.
-
-# Bein is distributed in the hope that it will be useful, but WITHOUT
-# ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-# FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
-# for more details.
-
-# You should have received a copy of the GNU General Public License
-# along with bein.  If not, see <http://www.gnu.org/licenses/>.
-
 """
 :mod:`bein` -- LIMS and workflow manager for bioinformatics
 ===========================================================
@@ -53,6 +34,7 @@ program
     The @program decorator provides a very simple way to bind external
     programs into bein for use in executions.
 """
+
 import subprocess
 import random
 import traceback
@@ -69,6 +51,7 @@ __version__ = '1.1.0'
 
 # miscellaneous types
 
+################################################################################
 class ProgramOutput(object):
     """Object passed to return_value functions when binding programs.
 
@@ -84,6 +67,7 @@ class ProgramOutput(object):
         self.stdout = stdout
         self.stderr = stderr
 
+################################################################################
 class ProgramFailed(Exception):
     """Thrown when a program bound by ``@program`` exits with a value other than 0."""
     def __init__(self, output):
@@ -94,6 +78,7 @@ class ProgramFailed(Exception):
         if self.output.stderr: message += "stderr:\n%s" % "".join(self.output.stderr)
         return message
 
+################################################################################
 def unique_filename_in(path=None):
     """Return a random filename unique in the given path.
 
@@ -113,7 +98,7 @@ def unique_filename_in(path=None):
             break
     return filename
 
-
+################################################################################
 class program(object):
     """Decorator to wrap external programs for use by bein.
 
@@ -188,6 +173,7 @@ class program(object):
     write these streams to.  If they are omitted, then both streams
     are captured and returned in the ``ProgramOutput`` object.
     """
+
     def __init__(self, gen_args):
         self.gen_args = gen_args
         self.__doc__ = gen_args.__doc__
@@ -458,7 +444,7 @@ class program(object):
         a.start()
         return(f)
 
-
+################################################################################
 class Execution(object):
     """``Execution`` objects hold the state of a current running execution.
 
@@ -484,6 +470,7 @@ class Execution(object):
         self.started_at = int(time.time())
         self.finished_at = None
         self.id = None
+
     def path_to_file(self, id_or_alias):
         """Fetch the path to *id_or_alias* in the attached LIMS."""
         if self.lims == None:
@@ -499,6 +486,7 @@ class Execution(object):
         written into the MiniLIMS repository.
         """
         self.programs.append(program)
+
     def add(self, filename, description="", associate_to_id=None,
             associate_to_filename=None, template=None, alias=None):
         """Add a file to the MiniLIMS object from this execution.
@@ -548,7 +536,7 @@ class Execution(object):
         except ValueError, v:
             raise ValueError("Tried to use a nonexistent file id " + str(fileid))
 
-
+################################################################################
 @contextmanager
 def execution(lims = None, description="", remote_working_directory=None):
     """Create an ``Execution`` connected to the given MiniLIMS object.
@@ -619,7 +607,7 @@ def execution(lims = None, description="", remote_working_directory=None):
             cleaned_up = True
         assert(cleaned_up)
 
-
+################################################################################
 class MiniLIMS(object):
     """Encapsulates a database and directory to track executions and files.
 
@@ -663,6 +651,7 @@ class MiniLIMS(object):
       * :meth:`delete_file_association`
       * :meth:`associated_files_of`
     """
+
     def __init__(self, path):
         self.db = sqlite3.connect(path, check_same_thread=False)
         self.file_path = os.path.abspath(path +".files")
@@ -1512,7 +1501,7 @@ class MiniLIMS(object):
         self.db.execute("""delete from file_association where fileid=? and associated_to=?""", (src,dst))
         self.db.commit()
 
-
+################################################################################
 def task(f):
     """Wrap the function *f* in an execution.
 
