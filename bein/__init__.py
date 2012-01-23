@@ -673,6 +673,9 @@ class MiniLIMS(object):
         self.db.create_function("deletefile",1,self._delete_repository_file)
         self.db.create_function("exportfile",2,self._export_file_from_repository)
 
+    def __repr__(self):
+        return '%s object from %s' % (self.__class__, self.file_path)
+
     def initialize_database(self, db):
         """Sets up a new MiniLIMS database.
         """
