@@ -49,8 +49,6 @@ from contextlib import contextmanager
 
 __version__ = '1.1.0'
 
-# miscellaneous types
-
 ################################################################################
 class ProgramOutput(object):
     """Object passed to return_value functions when binding programs.
@@ -204,7 +202,6 @@ class program(object):
             kwargs.pop('stderr')
         else:
             stderr = subprocess.PIPE
-
 
         d = self.gen_args(*args, **kwargs)
 
@@ -663,7 +660,7 @@ class MiniLIMS(object):
         self.db.create_function("exportfile",2,self._export_file_from_repository)
 
     def __repr__(self):
-        return '%s object from %s' % (self.__class__, self.file_path)
+        return '<%s object> from %s' % (self.__class__.__name__, self.file_path)
 
     def initialize_database(self, db):
         """Sets up a new MiniLIMS database.
