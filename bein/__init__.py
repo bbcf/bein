@@ -660,7 +660,7 @@ class MiniLIMS(object):
         self.db.create_function("deletefile",1,self._delete_repository_file)
         self.db.create_function("exportfile",2,self._export_file_from_repository)
 
-    def remove(self, path):
+    def remove(self):
         """Removes the MiniLIMS entierly."""
         # The files #
         shutil.rmtree(self.file_path)
