@@ -650,6 +650,7 @@ class MiniLIMS(object):
     """
 
     def __init__(self, path):
+        self.db_path = path
         self.db = sqlite3.connect(path, check_same_thread=False)
         self.file_path = os.path.abspath(path +".files")
         if not(os.path.exists(self.file_path)):
@@ -658,6 +659,14 @@ class MiniLIMS(object):
         self.db.create_function("importfile",1,self._copy_file_to_repository)
         self.db.create_function("deletefile",1,self._delete_repository_file)
         self.db.create_function("exportfile",2,self._export_file_from_repository)
+
+    def remove(self, path):
+        """Removes the MiniLIMS entierly."""
+        # The files #
+        shutil.rmtree(self.file_path)
+        # The SQLite file #
+        self.db.close()
+        os.remove(self.db_path)
 
     def __repr__(self):
         return '<%s object> from %s' % (self.__class__.__name__, self.file_path)
