@@ -190,6 +190,77 @@ class Execution(object):
             raise ValueError("Tried to use a nonexistent file id " + str(fileid))
 
 ################################################################################
+@contextmanager
+def execution(lims = None, description="", remote_working_directory=None):
+    """Create an ``Execution`` connected to the given MiniLIMS object.
+
+    ``execution`` is a ``contextmanager``, so it can be used in a ``with``
+    statement, as in::
+
+        with execution(mylims) as ex:
+            touch('boris')
+
+    It creates a temporary directory where the execution will work,
+    sets up the ``Execution`` object, then runs the body of the
+    ``with`` statement.  After the body finished, or if it fails and
+    throws an exception, ``execution`` writes the ``Execution`` to the
+    MiniLIMS repository and deletes the temporary directory after all
+    is finished.
+
+    The ``Execution`` has field ``id`` set to ``None`` during the
+    ``with`` block, but afterwards ``id`` is set to the execution ID
+    it ran as.  For example::
+
+        with execution(mylims) as ex:
+            pass
+
+        print ex.id
+
+    will print the execution ID the ``with`` block ran as.
+
+    On some clusters, such as VITAL-IT in Lausanne, the path to the
+    current directory is different on worker nodes where batch jobs
+    run than on the nodes from which jobs are submitted.  For
+    instance, if you are working in /scratch/abc on your local node,
+    the worker nodes might mount the same directory as
+    /nfs/boris/scratch/abc.  In this case, running programs via LSF
+    would not work correctly.
+
+    If this is the case, you can pass the equivalent directory on
+    worker nodes as *remote_working_directory*.  In the example above,
+    an execution may create a directory lK4321fdr21 in /scratch/abc.
+    On the worker node, it would be /nfs/boris/scratch/abc/lK4321fd21,
+    so you pass /nfs/boris/scratch/abc as *remote_working_directory*.
+    """
+    execution_dir = unique_filename_in(os.getcwd())
+    os.mkdir(os.path.join(os.getcwd(), execution_dir))
+    ex = Execution(lims,os.path.join(os.getcwd(), execution_dir))
+    if remote_working_directory == None:
+        ex.remote_working_directory = ex.working_directory
+    else:
+        ex.remote_working_directory = os.path.join(remote_working_directory,
+                                                   execution_dir)
+    os.chdir(os.path.join(os.getcwd(), execution_dir))
+    exception_string = None
+    try:
+        yield ex
+    except:
+        (exc_type, exc_value, exc_traceback) = sys.exc_info()
+        exception_string = ''.join(traceback.format_exception(exc_type, exc_value,
+                                                            exc_traceback))
+        raise
+    finally:
+        ex.finish()
+        try:
+            if lims != None:
+                ex.id = lims.write(ex, description, exception_string)
+        finally:
+            os.chdir("..")
+            shutil.rmtree(ex.working_directory, ignore_errors=True)
+            cleaned_up = True
+        assert(cleaned_up)
+
+################################################################################
 class program(object):
     """Decorator to wrap external programs for use by bein.
 
@@ -533,77 +604,6 @@ class program(object):
         a = threading.Thread(target=g)
         a.start()
         return(f)
-
-################################################################################
-@contextmanager
-def execution(lims = None, description="", remote_working_directory=None):
-    """Create an ``Execution`` connected to the given MiniLIMS object.
-
-    ``execution`` is a ``contextmanager``, so it can be used in a ``with``
-    statement, as in::
-
-        with execution(mylims) as ex:
-            touch('boris')
-
-    It creates a temporary directory where the execution will work,
-    sets up the ``Execution`` object, then runs the body of the
-    ``with`` statement.  After the body finished, or if it fails and
-    throws an exception, ``execution`` writes the ``Execution`` to the
-    MiniLIMS repository and deletes the temporary directory after all
-    is finished.
-
-    The ``Execution`` has field ``id`` set to ``None`` during the
-    ``with`` block, but afterwards ``id`` is set to the execution ID
-    it ran as.  For example::
-
-        with execution(mylims) as ex:
-            pass
-
-        print ex.id
-
-    will print the execution ID the ``with`` block ran as.
-
-    On some clusters, such as VITAL-IT in Lausanne, the path to the
-    current directory is different on worker nodes where batch jobs
-    run than on the nodes from which jobs are submitted.  For
-    instance, if you are working in /scratch/abc on your local node,
-    the worker nodes might mount the same directory as
-    /nfs/boris/scratch/abc.  In this case, running programs via LSF
-    would not work correctly.
-
-    If this is the case, you can pass the equivalent directory on
-    worker nodes as *remote_working_directory*.  In the example above,
-    an execution may create a directory lK4321fdr21 in /scratch/abc.
-    On the worker node, it would be /nfs/boris/scratch/abc/lK4321fd21,
-    so you pass /nfs/boris/scratch/abc as *remote_working_directory*.
-    """
-    execution_dir = unique_filename_in(os.getcwd())
-    os.mkdir(os.path.join(os.getcwd(), execution_dir))
-    ex = Execution(lims,os.path.join(os.getcwd(), execution_dir))
-    if remote_working_directory == None:
-        ex.remote_working_directory = ex.working_directory
-    else:
-        ex.remote_working_directory = os.path.join(remote_working_directory,
-                                                   execution_dir)
-    os.chdir(os.path.join(os.getcwd(), execution_dir))
-    exception_string = None
-    try:
-        yield ex
-    except:
-        (exc_type, exc_value, exc_traceback) = sys.exc_info()
-        exception_string = ''.join(traceback.format_exception(exc_type, exc_value,
-                                                            exc_traceback))
-        raise
-    finally:
-        ex.finish()
-        try:
-            if lims != None:
-                ex.id = lims.write(ex, description, exception_string)
-        finally:
-            os.chdir("..")
-            shutil.rmtree(ex.working_directory, ignore_errors=True)
-            cleaned_up = True
-        assert(cleaned_up)
 
 ################################################################################
 class MiniLIMS(object):
