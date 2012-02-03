@@ -573,7 +573,7 @@ class program(object):
                 return_code = sp.wait()
                 while not(os.path.exists(os.path.join(ex.working_directory,
                                                       stdout))):
-                    pass # We need to wait until the files actually show up
+                    time.sleep(1) # We need to wait until the files actually show up
                 if load_stdout:
                     with open(os.path.join(ex.working_directory,stdout), 'r') as fo:
                         stdout_value = fo.readlines()
@@ -581,7 +581,7 @@ class program(object):
                     stdout_value = None
 
                 while not(os.path.exists(os.path.join(ex.working_directory,stderr))):
-                    pass # We need to wait until the files actually show up
+                    time.sleep(1) # We need to wait until the files actually show up
                 if load_stderr:
                     with open(os.path.join(ex.working_directory,stderr), 'r') as fe:
                         stderr_value = fe.readlines()
