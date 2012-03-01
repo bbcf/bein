@@ -29,46 +29,43 @@ This module is a repository of assorted robust functions that have
 been developed for bein in day to day use.  Much of it is focused on
 analysis of high throughput sequencing data, but if you have useful
 functions for a different domain, please contribute them.
+
+Here is an example of cat::
+
+    @program
+    def _cat(input_file):
+        return {'arguments': ['cat',input_file],
+                'return_value': None}
+
+    def cat(ex, input_file, filename=None):
+        if filename == None:
+            filename = unique_filename_in()
+        _cat(ex, input_file, stdout=filename)
+        return filename
+
+    def _cat_nonblocking(ex, input_file, filename=None):
+        if filename == None:
+            filename = unique_filename_in()
+        f = _cat.nonblocking(ex, input_file, stdout=filename)
+        class Future(object):
+            def __init__(self, f):
+                self.future = f
+            def wait(self):
+                self.future.wait()
+                return filename
+        return Future(f)
 """
 
-import pickle
-import re
-import sys
-import os
-import threading
+# Built-in modules #
+import os, sys, program, re, pickle, threading
 from contextlib import contextmanager
 
-from bein import *
+# Internal modules #
+from bein import unique_filename_in
+from bein.exe import Execution
+from bein.lims import MiniLIMS
 
-# Basic utilities
-
-# 'cat' is used only as an example; it is useless in Bein.
-# @program
-# def _cat(input_file):
-#     return {'arguments': ['cat',input_file],
-#             'return_value': None}
-
-# def cat(ex, input_file, filename=None):
-#     if filename == None:
-#         filename = unique_filename_in()
-#     _cat(ex, input_file, stdout=filename)
-#     return filename
-
-# def _cat_nonblocking(ex, input_file, filename=None):
-#     if filename == None:
-#         filename = unique_filename_in()
-#     f = _cat.nonblocking(ex, input_file, stdout=filename)
-#     class Future(object):
-#         def __init__(self, f):
-#             self.future = f
-#         def wait(self):
-#             self.future.wait()
-#             return filename
-#     return Future(f)
-
-# cat.nonblocking = _cat_nonblocking
-
-
+################################################################################
 def pause():
     """Pause until the user hits Return."""
     print >> sys.stdout, "Paused. Hit a key to continue."
