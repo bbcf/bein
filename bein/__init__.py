@@ -546,6 +546,11 @@ class program(object):
             stderr = unique_filename_in(ex.working_directory)
             load_stderr = True
 
+        mem_opts = []
+        if 'memory' in kwargs:
+            gigabytes = int(kwargs['memory'])
+            mem_opts = ["-M",str(gigabytes*1000000),
+                        "-R","rusage[mem=%i]" %gigabytes*1000]
         d = self.gen_args(*args, **kwargs)
 
         # Jacques Rougemont figured out the following syntax that works in
@@ -553,8 +558,8 @@ class program(object):
         remote_cmd = " ".join(d["arguments"])
         remote_cmd += " > "+stdout
         remote_cmd = " ( "+remote_cmd+" ) >& "+stderr
-        cmds = ["bsub","-cwd",ex.remote_working_directory,"-o","/dev/null",
-                "-e","/dev/null","-K","-r",remote_cmd]
+        cmds = ["bsub","-cwd",ex.remote_working_directory,
+                "-o","/dev/null","-e","/dev/null"]+mem_opts+["-K","-r",remote_cmd]
         class Future(object):
             def __init__(self):
                 self.program_output = None
@@ -573,7 +578,7 @@ class program(object):
                 return_code = sp.wait()
                 while not(os.path.exists(os.path.join(ex.working_directory,
                                                       stdout))):
-                    time.sleep(1) # We need to wait until the files actually show up
+                    time.sleep(10) # We need to wait until the files actually show up
                 if load_stdout:
                     with open(os.path.join(ex.working_directory,stdout), 'r') as fo:
                         stdout_value = fo.readlines()
@@ -581,7 +586,7 @@ class program(object):
                     stdout_value = None
 
                 while not(os.path.exists(os.path.join(ex.working_directory,stderr))):
-                    time.sleep(1) # We need to wait until the files actually show up
+                    time.sleep(10) # We need to wait until the files actually show up
                 if load_stderr:
                     with open(os.path.join(ex.working_directory,stderr), 'r') as fe:
                         stderr_value = fe.readlines()
