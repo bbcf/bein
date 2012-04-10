@@ -551,7 +551,7 @@ class program(object):
             gigabytes = int(kwargs['memory'])
             kwargs.pop('memory')
             mem_opts = ["-M",str(gigabytes*1000000),
-                        "-R","rusage[mem=%i]" %gigabytes*1000]
+                        "-R","rusage[mem=%i]" %(gigabytes*1000)]
         d = self.gen_args(*args, **kwargs)
 
         # Jacques Rougemont figured out the following syntax that works in
