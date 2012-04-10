@@ -367,6 +367,8 @@ class program(object):
         else:
             stderr = subprocess.PIPE
 
+        if 'memory' in kwargs: kwargs.pop('memory')
+
         d = self.gen_args(*args, **kwargs)
 
         try:
@@ -465,6 +467,8 @@ class program(object):
             kwargs.pop('stderr')
         else:
             stderr = subprocess.PIPE
+
+        if 'memory' in kwargs: kwargs.pop('memory')
 
         d = self.gen_args(*args, **kwargs)
 
