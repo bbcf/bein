@@ -549,6 +549,7 @@ class program(object):
         mem_opts = []
         if 'memory' in kwargs:
             gigabytes = int(kwargs['memory'])
+            kwargs.pop('memory')
             mem_opts = ["-M",str(gigabytes*1000000),
                         "-R","rusage[mem=%i]" %gigabytes*1000]
         d = self.gen_args(*args, **kwargs)
