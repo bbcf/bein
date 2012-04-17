@@ -164,7 +164,7 @@ html_show_sphinx = False
 htmlhelp_basename = 'beindoc'
 
 # Google analytics
-googleanalytics_id = "UA-24167610-16"
+googleanalytics_id = "UA-24167610-22"
 
 # -- Options for LaTeX output --------------------------------------------------
 
