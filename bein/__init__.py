@@ -914,7 +914,20 @@ class MiniLIMS(object):
         exid = self.db.execute("select last_insert_rowid()").fetchone()[0]
 
         # Write all the programs
+
+        # If the program is not found, the following will return an AttributeError.
+        # We avoid this case by replacing the program failed by a fake program instance.
+        class failed_program(object):
+            def __init__(self, pid):
+                self.stdout = None
+                self.stderr = exception_string
+                self.pid = pid
+                self.return_code = exception_string
+                self.arguments = []
+
         for i,p in enumerate(ex.programs):
+            if p is None:
+                p = failed_program(i)
             if p.stdout == None:
                 stdout_value = ""
             else:
@@ -1118,7 +1131,6 @@ class MiniLIMS(object):
              cause execution.exception not to be null without making
              fail the script itself.
         """
-
         desc_request = "(id is not null)"
         if isinstance(with_description,dict):
             sql = """select description,id from execution where length(description)>1"""
