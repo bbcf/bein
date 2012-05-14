@@ -184,7 +184,7 @@ class TestMiniLIMS(TestCase):
             error = M.fetch_execution(e)["exception_string"]
             self.assertIsNone(error)
         ex_found_fail = M.search_executions(with_description="desc_test", fails=True)
-        for e in ex_found:
+        for e in ex_found_fail:
             error = M.fetch_execution(e)["exception_string"]
             self.assertIsNotNone(error)
         M.delete_execution(ex.id)
@@ -355,16 +355,16 @@ class TestAssociatePreservesFilenames(TestCase):
                 pass
 
 
-def test_given(tests):
-    module = sys.modules[__name__]
-    if tests == None:
-        defaultTest = None
-    else:
-        loader = TestLoader()
-        defaultTest = TestSuite()
-        tests = loader.loadTestsFromNames(tests, module)
-        defaultTest.addTests(tests)
-    main(defaultTest=defaultTest)
+#def test_given(tests):
+#    module = sys.modules[__name__]
+#    if tests == None:
+#        defaultTest = None
+#    else:
+#        loader = TestLoader()
+#        defaultTest = TestSuite()
+#        tests = loader.loadTestsFromNames(tests, module)
+#        defaultTest.addTests(tests)
+#    main(defaultTest=defaultTest)
 
 if __name__ == '__main__':
     if len(sys.argv) > 1:
