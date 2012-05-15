@@ -904,6 +904,7 @@ class MiniLIMS(object):
         to the repository are copied to the repository and entered in
         the file table.
         """
+        self.db.text_factory = 'unicode'
         description = str(description)
         self.db.execute("""insert into execution
                            (started_at, finished_at, working_directory,
