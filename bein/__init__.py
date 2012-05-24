@@ -534,7 +534,7 @@ class program(object):
         if not(isinstance(ex,Execution)):
             raise ValueError("First argument to a program must be an Execution.")
 
-        # Check if `bsub` exists in $PATH
+        # Check if `bsub` exists in $PATH.
         bsub_found = None
         path = [os.path.join(s,'bsub') for s in os.environ["PATH"].split(os.pathsep)]
         for p in path:
