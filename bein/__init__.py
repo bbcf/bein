@@ -573,7 +573,7 @@ class program(object):
         remote_cmd += " > "+stdout
         remote_cmd = " ( "+remote_cmd+" ) >& "+stderr
         cmds = ["bsub","-cwd",ex.remote_working_directory,
-                "-o","/dev/null","-e","/dev/null"]+mem_opts+["-K","-r",remote_cmd]
+                "-o","/dev/null","-e","/dev/null"] + mem_opts + ["-K","-r",remote_cmd]
         class Future(object):
             def __init__(self):
                 self.program_output = None
