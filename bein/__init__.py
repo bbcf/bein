@@ -534,6 +534,15 @@ class program(object):
         if not(isinstance(ex,Execution)):
             raise ValueError("First argument to a program must be an Execution.")
 
+        # Check if `bsub` exists in $PATH
+        bsub_found = None
+        path = [os.path.join(s,'bsub') for s in os.environ["PATH"].split(os.pathsep)]
+        for p in path:
+            if (os.path.isfile(p) and os.access(p, os.X_OK)):
+                bsub_found = True; break
+        if not bsub_found:
+            raise ValueError("bsub: command not found in PATH. Try via='local'.")
+
         if kwargs.has_key('stdout'):
             stdout = kwargs['stdout']
             kwargs.pop('stdout')
