@@ -671,7 +671,7 @@ class MiniLIMS(object):
 
     def __init__(self, path):
         self.db_path = path
-        self.db = sqlite3.connect(path, check_same_thread=False)
+        self.db = sqlite3.connect(path, check_same_thread=False,timeout=300)
         self.file_path = os.path.abspath(path +".files")
         if not(os.path.exists(self.file_path)):
             self.initialize_database(self.db)
