@@ -573,7 +573,7 @@ class program(object):
         remote_cmd += " > "+stdout
         remote_cmd = " ( "+remote_cmd+" ) >& "+stderr
         cmds = ["bsub","-cwd",ex.remote_working_directory,
-                "-o","/dev/null","-e","/dev/null"] + mem_opts + ["-K","-r",remote_cmd]
+                "-o","/dev/null","-e","/dev/null"]+mem_opts+["-K","-r",remote_cmd]
         class Future(object):
             def __init__(self):
                 self.program_output = None
@@ -671,7 +671,7 @@ class MiniLIMS(object):
 
     def __init__(self, path):
         self.db_path = path
-        self.db = sqlite3.connect(path, check_same_thread=False,timeout=300)
+        self.db = sqlite3.connect(path, check_same_thread=False,timeout=6000)
         self.file_path = os.path.abspath(path +".files")
         if not(os.path.exists(self.file_path)):
             self.initialize_database(self.db)
@@ -1022,7 +1022,7 @@ class MiniLIMS(object):
     def _rename_in_repository(self, fileid, new_repository_name):
         old_target_name = self.db.execute("""select repository_name from file
                                              where id=?""", (fileid,)).fetchone()[0]
-        self.db.execute("""drop trigger prevent_repository_name_change""")
+        self.db.execute("""drop trigger if exists prevent_repository_name_change""")
         self.db.execute("""update file set repository_name=? where id=?""",
                         (new_repository_name, fileid))
         self.db.execute("""CREATE TRIGGER prevent_repository_name_change
