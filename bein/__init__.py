@@ -114,7 +114,7 @@ class Execution(object):
     ``use`` fetches a file from the LIMS repository into the working
     directory.
     """
-    def __init__(self, lims, working_directory):
+    def __init__(self, lims, working_directory=os.getcwd()):
         self.lims = lims
         self.working_directory = working_directory
         self.programs = []
