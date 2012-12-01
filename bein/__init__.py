@@ -951,7 +951,7 @@ class MiniLIMS(object):
                                                    return_code,stdout,stderr)
                                values (?,?,?,?,?,?)""",
                             (i, exid, p.pid, p.return_code,
-                             stdout_value, stderr_value))
+                             stdout_value.decode('utf-8'), stderr_value.decode('utf-8')))
             for j,a in enumerate(p.arguments):
                 self.db.execute("""insert into argument(pos,program,execution,
                                    argument) values (?,?,?,?)""",
