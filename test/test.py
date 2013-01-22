@@ -17,9 +17,12 @@ def hostname_contains(pattern):
     else:
         return True
 
-if hostname_contains('vital-it.ch'):
-    not_vital_it = False
-else:
+try:
+    if hostname_contains('vital-it.ch'):
+        not_vital_it = False
+    else:
+        not_vital_it = True
+except: 
     not_vital_it = True
 
 @program

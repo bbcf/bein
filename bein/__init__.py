@@ -319,7 +319,7 @@ class program(object):
     By default, ``nonblocking`` runs local processes, but you can
     control how it runs its processes with the ``via`` keyword
     argument.  For example, on systems using the LSF batch submission
-    system,s you can run commands via batch submission by passing the
+    systems, you can run commands via batch submission by passing the
     ``via`` argument the value ``"lsf"``::
 
         with execution(lims) as ex:
@@ -368,6 +368,7 @@ class program(object):
             stderr = subprocess.PIPE
 
         if 'memory' in kwargs: kwargs.pop('memory')
+        if 'threads' in kwargs: kwargs.pop('threads')
 
         d = self.gen_args(*args, **kwargs)
 
@@ -433,6 +434,11 @@ class program(object):
         If you need to pass a keyword argument ``via`` to your
         program, you will need to call one of the hidden methods
         (``_local`` or ``_lsf``) directly.
+
+        Maximum memory allocation can be specifie via the ``memory`` argument,
+        given in Kilobytes.
+        The maximum number of cluster cores to be used can be specified via the
+        ``threads`` argument (equivalent to `bsub -n nthreads -R span[hosts=1]`).
         """
         if not(isinstance(ex,Execution)):
             raise ValueError("First argument to a program must be an Execution.")
@@ -469,6 +475,7 @@ class program(object):
             stderr = subprocess.PIPE
 
         if 'memory' in kwargs: kwargs.pop('memory')
+        if 'threads' in kwargs: kwargs.pop('threads')
 
         d = self.gen_args(*args, **kwargs)
 
@@ -559,21 +566,25 @@ class program(object):
             stderr = unique_filename_in(ex.working_directory)
             load_stderr = True
 
-        mem_opts = []
-        if 'memory' in kwargs:
-            gigabytes = int(kwargs['memory'])
-            kwargs.pop('memory')
-            mem_opts = ["-M",str(gigabytes*1000000),
-                        "-R","rusage[mem=%i]" %(gigabytes*1000)]
+        threads = []
+        if 'threads' in kwargs:
+            threads = ['-n',int(kwargs['threads']),'-R','span[hosts=1]']
+            kwargs.pop('threads')
         d = self.gen_args(*args, **kwargs)
 
-        # Jacques Rougemont figured out the following syntax that works in
-        # both bash and tcsh.
+        mem_opts = []
+        if 'memory' in kwargs:
+            kilobytes = int(kwargs['memory'])
+            kwargs.pop('memory')
+            mem_opts = ["-M",str(kilobytes*1000000),
+                        "-R","rusage[mem=%i]" %(kilobytes*1000)]
+
+        # Jacques Rougemont figured out the following syntax that works in both bash and tcsh.
         remote_cmd = " ".join(d["arguments"])
         remote_cmd += " > "+stdout
         remote_cmd = " ( "+remote_cmd+" ) >& "+stderr
         cmds = ["bsub","-cwd",ex.remote_working_directory,
-                "-o","/dev/null","-e","/dev/null"] + mem_opts + ["-K","-r",remote_cmd]
+                "-o","/dev/null","-e","/dev/null"] + mem_opts + threads + ["-K","-r",remote_cmd]
         class Future(object):
             def __init__(self):
                 self.program_output = None
