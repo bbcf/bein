@@ -574,10 +574,10 @@ class program(object):
 
         mem_opts = []
         if 'memory' in kwargs:
-            kilobytes = int(kwargs['memory'])
+            gigabytes = int(kwargs['memory'])
             kwargs.pop('memory')
-            mem_opts = ["-M",str(kilobytes*1000000),
-                        "-R","rusage[mem=%i]" %(kilobytes*1000)]
+            mem_opts = ["-M",str(gigabytes*1000000),
+                        "-R","rusage[mem=%i]" %(gigabytes*1000)]
 
         # Jacques Rougemont figured out the following syntax that works in both bash and tcsh.
         remote_cmd = " ".join(d["arguments"])
