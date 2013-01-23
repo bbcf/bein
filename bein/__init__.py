@@ -570,7 +570,6 @@ class program(object):
         if 'threads' in kwargs:
             threads = ['-n',int(kwargs['threads']),'-R','span[hosts=1]']
             kwargs.pop('threads')
-        d = self.gen_args(*args, **kwargs)
 
         mem_opts = []
         if 'memory' in kwargs:
@@ -578,6 +577,8 @@ class program(object):
             kwargs.pop('memory')
             mem_opts = ["-M",str(gigabytes*1000000),
                         "-R","rusage[mem=%i]" %(gigabytes*1000)]
+
+        d = self.gen_args(*args, **kwargs)
 
         # Jacques Rougemont figured out the following syntax that works in both bash and tcsh.
         remote_cmd = " ".join(d["arguments"])
