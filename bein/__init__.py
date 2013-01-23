@@ -568,7 +568,7 @@ class program(object):
 
         threads = []
         if 'threads' in kwargs:
-            threads = ['-n',int(kwargs['threads']),'-R','span[hosts=1]']
+            threads = ['-n',str(kwargs['threads']),'-R','span[hosts=1]']
             kwargs.pop('threads')
 
         mem_opts = []
