@@ -252,7 +252,7 @@ def execution(lims = None, description="", remote_working_directory=None):
     finally:
         ex.finish()
         try:
-            if lims != None:
+            if lims is not None:
                 ex.id = lims.write(ex, description, exception_string)
         finally:
             os.chdir("..")
@@ -1578,9 +1578,9 @@ def task(f):
 
         f(None, "boris")
 
-    which is the same as creation an execution without attaching it to
-    a MiniLIMS.  In this case it will fail, since ``f`` tries to add a
-    file to the MiniLIMS.
+    which is the same as creating an execution without attaching it to
+    a MiniLIMS. (In this case it will fail, since ``f`` tries to add a
+    file to the MiniLIMS.)
 
     The return value is a dictionary with three keys:
 
