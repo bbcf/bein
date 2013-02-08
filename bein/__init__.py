@@ -437,7 +437,8 @@ class program(object):
 
         Maximum memory allocation can be specifie via the ``memory`` argument,
         given in Kilobytes.
-        The maximum number of cluster cores to be used can be specified via the
+        The desired number of threads (multiple cores on a single cluster node) 
+        can be specified via the
         ``threads`` argument (equivalent to `bsub -n nthreads -R span[hosts=1]`).
         """
         if not(isinstance(ex,Execution)):
@@ -1578,9 +1579,9 @@ def task(f):
 
         f(None, "boris")
 
-    which is the same as creation an execution without attaching it to
-    a MiniLIMS.  In this case it will fail, since ``f`` tries to add a
-    file to the MiniLIMS.
+    which is the same as creating an execution without attaching it to
+    a MiniLIMS. (In this case it will fail, since ``f`` tries to add a
+    file to the MiniLIMS.)
 
     The return value is a dictionary with three keys:
 
