@@ -252,7 +252,7 @@ def execution(lims = None, description="", remote_working_directory=None):
     finally:
         ex.finish()
         try:
-            if lims != None:
+            if lims is not None:
                 ex.id = lims.write(ex, description, exception_string)
         finally:
             os.chdir("..")
