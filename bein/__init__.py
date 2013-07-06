@@ -532,11 +532,6 @@ class program(object):
         a.start()
         return f
 
-    def lsf(self, ex, *args, **kwargs):
-        """Deprecated.  Use nonblocking(via="lsf") instead."""
-        raise DeprecationWarning("Use nonblocking(via='lsf') instead.")
-        return self._lsf(ex, *args, **kwargs)
-
     def _lsf(self, ex, *args, **kwargs):
         """Method called by ``nonblocking`` to run via LSF."""
         if not(isinstance(ex,Execution)):
@@ -594,7 +589,10 @@ class program(object):
             def wait(self):
                 v.wait()
                 ex.report(self.program_output)
-                return self.return_value
+                if isinstance(f.return_value, Exception):
+                    raise self.return_value
+                else:
+                    return self.return_value
         f = Future()
         v = threading.Event()
         def g():
@@ -629,8 +627,8 @@ class program(object):
                     else:
                         f.return_value = z
                 v.set()
-            except:
-                f.return_value = None
+            except Exception, e:
+                f.return_value = e
                 v.set()
                 raise
         a = threading.Thread(target=g)
