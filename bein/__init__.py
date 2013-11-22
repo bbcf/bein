@@ -436,8 +436,8 @@ class program(object):
         program, you will need to call one of the hidden methods
         (``_local`` or ``_lsf``) directly.
 
-        Maximum memory allocation can be specified via the ``memory`` argument,
-        given in Kilobytes.
+        Maximum memory allocation can be specifie via the ``memory`` argument,
+        given in Gigabytes.
         The desired number of threads (multiple cores on a single cluster node)
         can be specified via the
         ``threads`` argument (equivalent to `bsub -n nthreads -R span[hosts=1]`).
