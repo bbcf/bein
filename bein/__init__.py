@@ -369,6 +369,7 @@ class program(object):
 
         if 'memory' in kwargs: kwargs.pop('memory')
         if 'threads' in kwargs: kwargs.pop('threads')
+        if 'queue' in kwargs: kwargs.pop('queue')
 
         d = self.gen_args(*args, **kwargs)
 
@@ -477,6 +478,7 @@ class program(object):
 
         if 'memory' in kwargs: kwargs.pop('memory')
         if 'threads' in kwargs: kwargs.pop('threads')
+        if 'queue' in kwargs: kwargs.pop('queue')
 
         d = self.gen_args(*args, **kwargs)
 
@@ -574,6 +576,8 @@ class program(object):
             mem_opts = ["-M",str(gigabytes*1000000),
                         "-R","rusage[mem=%i]" %(gigabytes*1000)]
 
+        queue = ["-q",kwargs.pop("queue","normal")]
+
         d = self.gen_args(*args, **kwargs)
 
         # Jacques Rougemont figured out the following syntax that works in both bash and tcsh.
@@ -581,7 +585,8 @@ class program(object):
         remote_cmd += " > "+stdout
         remote_cmd = " ( "+remote_cmd+" ) >& "+stderr
         cmds = ["bsub","-cwd",ex.remote_working_directory,
-                "-o","/dev/null","-e","/dev/null"] + mem_opts + threads + ["-K","-r",remote_cmd]
+                "-o","/dev/null","-e","/dev/null"] 
+        cmds += queue+mem_opts+threads+["-K","-r",remote_cmd]
         class Future(object):
             def __init__(self):
                 self.program_output = None
