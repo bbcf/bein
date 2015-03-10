@@ -961,7 +961,7 @@ class MiniLIMS(object):
             if p.stderr == None:
                 stderr_value = ""
             else:
-                stderr_value = "".join(p.stderr)
+                stderr_value = ("".join(p.stderr))[0:2000]
 
             self.db.execute("""insert into program(pos,execution,pid,
                                                    return_code,stdout,stderr)
