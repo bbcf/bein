@@ -98,7 +98,7 @@ Next we actually run a workflow.  Workflows correspond to a single execution, an
        touch(ex, "boris")
        print ex.working_directory
 
-``execution(M)`` creates a new execution which will write its data to the MiniLIMS ``M``, and binds it to ``ex`` for the body of the with statement.  
+``execution(M)`` creates a new execution which will write its data to the MiniLIMS ``M``, and binds it to ``ex`` for the body of the with statement.
 
 ``touch`` is a binding to the Unix ``touch`` command.  Program bindings in bein always take the execution as their first argument.  In this case, we create an empty file named ``boris``.
 
@@ -119,7 +119,7 @@ Bein provides a simple webclient to browse MiniLIMS repositories.  Run the comma
 
     htminilims data
 
-and point your browser to ``http://localhost:8080``.  
+and point your browser to ``http://localhost:8080``.
 
 .. image:: beinclient1.png
 
@@ -349,7 +349,7 @@ We can bind it into bein with::
             return int("".join(p.stdout))
         return {'arguments': ["R","--vanilla","--slave","-f","/path/to/mean.R",
                               "--args"] + [str(n) for n in numbers],
-                'return_value': mean_R}
+                'return_value': read_mean}
 
 There are two common idioms here worth noting.  First, if you have to pass multiple arguments, append it to the list of other arguments.  Second, you must make sure your arguments are strings.  If you had written ``..."--args"] + numbers`` it would have failed because the ``numbers`` contains integers, not strings.
 
